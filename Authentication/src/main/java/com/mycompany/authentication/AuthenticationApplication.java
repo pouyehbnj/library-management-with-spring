@@ -1,4 +1,4 @@
-package com.mycompany.library;
+package com.mycompany.authentication;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -7,16 +7,21 @@ package com.mycompany.library;
  */
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 /**
  *
  * @author Pouyeh
  */
+@EnableAutoConfiguration
 @SpringBootApplication
-public class LibraryApplication {
+
+//@EntityScan(basePackages = {"com.mycompany.authentication.model"})
+public class AuthenticationApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(LibraryApplication.class, args);
+        SpringApplication.run(AuthenticationApplication.class, args);
     }
 
 }
