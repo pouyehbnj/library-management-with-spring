@@ -1,4 +1,4 @@
-package com.mycompany.library;
+package com.mycompany.storage;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

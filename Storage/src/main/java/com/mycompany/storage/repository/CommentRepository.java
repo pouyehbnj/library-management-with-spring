@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.authentication.repository;
+package com.mycompany.storage.repository;
 
-
-import com.mycompany.authentication.model.User;
+import com.mycompany.storage.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author Pouyeh
  */
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long>{
     
 }
