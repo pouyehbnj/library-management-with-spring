@@ -16,8 +16,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
  */
 @EnableAutoConfiguration
 @SpringBootApplication
-
-//@EntityScan(basePackages = {"com.mycompany.authentication.model"})
+@EntityScan(basePackages = {"com.mycompany.authentication.model"})
 public class AuthenticationApplication {
 
     public static void main(String[] args) {

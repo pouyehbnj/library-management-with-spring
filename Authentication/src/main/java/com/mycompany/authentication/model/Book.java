@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  * @author Pouyeh
  */
 @Entity
-@Table(name = "book")
+@Table(name = "books")
 public class Book {
 
     @Id
@@ -37,6 +37,9 @@ public class Book {
 
     @Column(name = "publisher")
     private String publisher;
+    
+    @Column(name = "author")
+    private String author;
 
     @Column(name = "publish_year")
     private String publishYear;
@@ -80,12 +83,17 @@ public class Book {
     public Date getCreatedAt() {
         return createdAt;
     }
+    
+    public String getAuthor() {
+        return author;
+    }
 
-    public Book(int id, String ISSN, String title, String publisher, String publishYear, String image, Date createdAt) {
+    public Book(int id, String ISSN, String title, String publisher, String author, String publishYear, String image, Date createdAt) {
         this.id = id;
         this.ISSN = ISSN;
         this.title = title;
         this.publisher = publisher;
+        this.author = author;
         this.publishYear = publishYear;
         this.image = image;
         this.createdAt = createdAt;
