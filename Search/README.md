@@ -1,4 +1,4 @@
-# Project com.mycompany/SpringTest
+# Project com.library/SpringTest
 
 Steps to run this project:
 
