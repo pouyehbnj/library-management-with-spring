@@ -7,6 +7,7 @@ package com.library.authentication.repository;
 
 
 import com.library.authentication.model.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -14,5 +15,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Pouyeh
  */
 public interface UserRepository extends JpaRepository<User, Long> {
-    
+    Optional<User> findByUserName(String username);
 }
