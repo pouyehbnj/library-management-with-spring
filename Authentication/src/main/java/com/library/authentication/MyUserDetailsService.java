@@ -28,13 +28,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class MyUserDetailsService  implements UserDetailsService{
      @Autowired
     UserRepository userRepository;
-
-     @Override
+//
+//     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + username));
-
-        return user.map(MyUserDetails::new).get();
+//        System.out.println("userrrr nameee:"+username);
+//        User user = userRepository.findByUsername(username);
+//        System.out.println("userrrr :"+user.getPassword());
+//        if (user == null) {
+//            throw new UsernameNotFoundException("User '"+username+"' not found !");
+//        }
+//
+//        return (UserDetails) user;
     }
 }
