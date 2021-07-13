@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.library.authentication.SampleAuthenticationManager;
 /**
  *
  * @author Pouyeh
@@ -34,6 +34,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 
 public class AuthenticationController {
+
+    // private AuthenticationManager authenticationManager;
+
+    // AuthenticationController(AuthenticationManager authenticationManager) {
+    //     this.authenticationManager = authenticationManager;
+    // }
 
     @GetMapping("/")
     public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
@@ -49,10 +55,10 @@ public class AuthenticationController {
         return principal.getName();
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     ResponseEntity login(@RequestBody User loginRequest) {
         
-    AuthenticationManager authenticationManager = null;
+    AuthenticationManager authenticationManager = new SampleAuthenticationManager();
     String username = loginRequest.getUsername();
     String password = loginRequest.getPassword();
     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
