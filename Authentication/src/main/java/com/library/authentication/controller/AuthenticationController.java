@@ -10,12 +10,10 @@ import java.io.ObjectInputFilter.Status;
 import java.security.Principal;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,27 +24,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.library.authentication.SampleAuthenticationManager;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
+import org.springframework.session.config.annotation.web.server.EnableSpringWebSession;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.web.context.request.RequestContextHolder;
+
 /**
  *
  * @author Pouyeh
  */
 @Controller
-@RestController
-
 public class AuthenticationController {
 
-    // private AuthenticationManager authenticationManager;
-
-    // AuthenticationController(AuthenticationManager authenticationManager) {
-    //     this.authenticationManager = authenticationManager;
-    // }
-
+    @Autowired
+        FindByIndexNameSessionRepository<? extends Session> sessions;
     @GetMapping("/")
     public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
         //HttpServletRequest request) {
         model.addAttribute("name", name);
         // request.setAttribute("hello", "test");
-        return "greeting";
+        return "greeting.html";
     }
 
     @GetMapping("/test")
@@ -56,17 +63,33 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    ResponseEntity login(@RequestBody User loginRequest) {
-        
-    AuthenticationManager authenticationManager = new SampleAuthenticationManager();
-    String username = loginRequest.getUsername();
-    String password = loginRequest.getPassword();
-    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-    Authentication authentication = (Authentication) authenticationManager.authenticate(token);
-    SecurityContextHolder
-        .getContext()
-        .setAuthentication(authentication);
-    return new ResponseEntity<> (authentication.getPrincipal(), HttpStatus.OK);
+    ResponseEntity login(@RequestBody User loginRequest, Principal principal) {
+
+        AuthenticationManager authenticationManager = new SampleAuthenticationManager();
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+        Authentication authentication = (Authentication) authenticationManager.authenticate(token);
+        SecurityContextHolder
+                .getContext()
+                .setAuthentication(authentication);
+       
+        Collection<? extends Session> usersSessions = sessions.findByPrincipalName(principal.getName()).values();
+        for(Session session:usersSessions){
+             System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
+             
+        }
+       
+        return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
     }
-    
+        
+
+    @RequestMapping("/sessions")
+    public String index(Principal principal) {
+  
+        System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
+        return "greeting";
+
+    }
+
 }
