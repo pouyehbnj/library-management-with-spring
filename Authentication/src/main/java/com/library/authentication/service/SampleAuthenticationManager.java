@@ -1,4 +1,4 @@
-package com.library.authentication;
+package com.library.authentication.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken; 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public class SampleAuthenticationManager implements AuthenticationManager {
     static final List<GrantedAuthority> AUTHORITIES = new ArrayList<GrantedAuthority>();
-    public SampleAuthenticationManager(String role){
+
+    public SampleAuthenticationManager(String role) {
         AUTHORITIES.add(new SimpleGrantedAuthority(role));
     }
-//    static {
-//        AUTHORITIES.add(new SimpleGrantedAuthority("ROLE_USER"));
-//    }
+    // static {
+    // AUTHORITIES.add(new SimpleGrantedAuthority("ROLE_USER"));
+    // }
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -28,5 +29,4 @@ public class SampleAuthenticationManager implements AuthenticationManager {
         throw new BadCredentialsException("Bad Credentials");
     }
 
-    
 }
