@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @EnableAutoConfiguration
 @SpringBootApplication
-@EntityScan(basePackages = {"com.library.authentication.model"})
+//@EntityScan(basePackages = {"com.library.authentication.model"})
 //@EnableJpaRepositories("com.library.authentication.repository")
 public class AuthenticationApplication {
 

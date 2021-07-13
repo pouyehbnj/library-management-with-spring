@@ -70,9 +70,11 @@ public class AuthenticationController {
 
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
-        System.out.println("test::" + userRepository.findByUsername(username).get(0).getRole());
-
-        AuthenticationManager authenticationManager = new SampleAuthenticationManager(userRepository.findByUsername(username).get(0).getRole());
+        System.out.println("user:" +username);
+        System.out.println("role:"+userRepository.findByusername(username).getRole());
+        System.out.println("user:" +username);
+        
+        AuthenticationManager authenticationManager = new SampleAuthenticationManager(userRepository.findByid(1).getRole());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = (Authentication) authenticationManager.authenticate(token);
         SecurityContextHolder

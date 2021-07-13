@@ -28,7 +28,7 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @Column(name = "username")
+    @Column(name = "username",unique=true, nullable= false)
     private String username;
 
     @Column(name = "password")

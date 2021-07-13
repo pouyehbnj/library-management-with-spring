@@ -5,6 +5,7 @@
  */
 package com.library.authentication.repository;
 
+
 import com.library.authentication.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
