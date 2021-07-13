@@ -9,6 +9,8 @@
 .springBeans
 .sts4-cache
 
+.vscode
+
 .idea
 *.iws
 *.iml
