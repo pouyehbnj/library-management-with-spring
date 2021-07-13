@@ -47,7 +47,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 public class AuthenticationController {
 
     @Autowired
-        FindByIndexNameSessionRepository<? extends Session> sessions;
+    FindByIndexNameSessionRepository<? extends Session> sessions;
+
     @GetMapping("/")
     public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
         //HttpServletRequest request) {
@@ -61,32 +62,35 @@ public class AuthenticationController {
         Principal principal = request.getUserPrincipal();
         return principal.getName();
     }
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/login")
     ResponseEntity login(@RequestBody User loginRequest, Principal principal) {
 
-        AuthenticationManager authenticationManager = new SampleAuthenticationManager();
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
+        System.out.println("test::" + userRepository.findByUsername(username).get(0).getRole());
+
+        AuthenticationManager authenticationManager = new SampleAuthenticationManager(userRepository.findByUsername(username).get(0).getRole());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = (Authentication) authenticationManager.authenticate(token);
         SecurityContextHolder
                 .getContext()
                 .setAuthentication(authentication);
-       
+
         Collection<? extends Session> usersSessions = sessions.findByPrincipalName(principal.getName()).values();
-        for(Session session:usersSessions){
-             System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
-             
+        for (Session session : usersSessions) {
+            System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
+
         }
-       
+
         return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
     }
-        
 
     @RequestMapping("/sessions")
     public String index(Principal principal) {
-  
+
         System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
         return "greeting";
 

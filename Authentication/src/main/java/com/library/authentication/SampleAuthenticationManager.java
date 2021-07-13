@@ -13,10 +13,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 public class SampleAuthenticationManager implements AuthenticationManager {
     static final List<GrantedAuthority> AUTHORITIES = new ArrayList<GrantedAuthority>();
-
-    static {
-        AUTHORITIES.add(new SimpleGrantedAuthority("ROLE_USER"));
+    public SampleAuthenticationManager(String role){
+        AUTHORITIES.add(new SimpleGrantedAuthority(role));
     }
+//    static {
+//        AUTHORITIES.add(new SimpleGrantedAuthority("ROLE_USER"));
+//    }
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
