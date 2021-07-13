@@ -49,7 +49,7 @@ public class AuthenticationController {
         return principal.getName();
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     ResponseEntity login(@RequestBody User loginRequest) {
         
     AuthenticationManager authenticationManager = null;
