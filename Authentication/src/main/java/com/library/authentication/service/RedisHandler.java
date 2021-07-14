@@ -46,10 +46,12 @@ public class RedisHandler {
         Boolean exists = jedis.exists(sessionId);
         
         if (exists) {
+            System.out.println("found!");
             res.put("authenticated", true);
             res.put("role", role);
             return res;
         } else {
+            System.out.println("not found!");
             res.put("authenticated", false);
             return res;
         }

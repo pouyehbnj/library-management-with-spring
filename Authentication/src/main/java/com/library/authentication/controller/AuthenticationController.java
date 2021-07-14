@@ -95,6 +95,8 @@ public class AuthenticationController {
             //
             Cookie cookie = new Cookie("sessionID", RequestContextHolder.currentRequestAttributes().getSessionId());
             response.addCookie(cookie);
+            cookie = new Cookie("username", username);
+            response.addCookie(cookie);
             System.out.println("session id:" + RequestContextHolder.currentRequestAttributes().getSessionId());
 
             for (Session session : usersSessions) {
