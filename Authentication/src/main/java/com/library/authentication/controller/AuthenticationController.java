@@ -124,16 +124,20 @@ public class AuthenticationController {
 
         try {
             RedisHandler redis = new RedisHandler();
-            redis.findSessions(id);
+            Boolean session = redis.findSessions(id);
             
+            if(session){
+                System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
+                return ResponseEntity.ok("Authentication Confirmed");
+            }else{
+                return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+            }
         } catch (Exception ex) {
             System.out.println("error:" + ex);
             return new ResponseEntity<>("Redis Error", HttpStatus.INTERNAL_SERVER_ERROR);
-            // Logger.getLogger(AuthenticationController.class.getName()).log(Level.SEVERE,
-            // null, ex);
+
         }
-        System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
-        return ResponseEntity.ok("Authentication Confirmed");
+       
     }
 
 }
