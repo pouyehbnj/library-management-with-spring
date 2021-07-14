@@ -125,6 +125,7 @@ public class AuthenticationController {
         try {
             RedisHandler redis = new RedisHandler();
             redis.findSessions(id);
+            
         } catch (Exception ex) {
             System.out.println("error:" + ex);
             return new ResponseEntity<>("Redis Error", HttpStatus.INTERNAL_SERVER_ERROR);
