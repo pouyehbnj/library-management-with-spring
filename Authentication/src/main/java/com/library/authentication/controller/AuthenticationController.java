@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -68,7 +69,7 @@ public class AuthenticationController {
     private UserRepository userRepository;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
-            MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity login(@RequestParam Map<String, String> loginRequest, Principal principal,
             HttpServletResponse response) {
 
@@ -77,7 +78,6 @@ public class AuthenticationController {
 
         System.out.println("user:" + username);
         System.out.println("role:" + userRepository.findByusername(username).getRole());
-        System.out.println("user:" + username);
 
         AuthenticationManager authenticationManager = new SampleAuthenticationManager(
                 userRepository.findByusername(username).getRole());
@@ -95,6 +95,7 @@ public class AuthenticationController {
             //
             Cookie cookie = new Cookie("sessionID", RequestContextHolder.currentRequestAttributes().getSessionId());
             response.addCookie(cookie);
+            System.out.println("session id:" + RequestContextHolder.currentRequestAttributes().getSessionId());
 
             for (Session session : usersSessions) {
                 System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
@@ -114,26 +115,39 @@ public class AuthenticationController {
         return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/checkSessions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
-//            MediaType.APPLICATION_JSON_VALUE })
-//    ResponseEntity checkSessions(@RequestBody Map<String, String> req) {
-//        String username = req.get("username");
-//        String id = req.get("sessionID");
-//        System.out.println("user --------------------- " + username);
-//        System.out.println("ID --------------------- " + id);
-//
-//        try {
-//            RedisHandler redis = new RedisHandler();
-//            redis.findSessions(id);
-//            
-//        } catch (Exception ex) {
-//            System.out.println("error:" + ex);
-//            return new ResponseEntity<>("Redis Error", HttpStatus.INTERNAL_SERVER_ERROR);
-//            // Logger.getLogger(AuthenticationController.class.getName()).log(Level.SEVERE,
-//            // null, ex);
-//        }
-//        System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
-//        return ResponseEntity.ok("Authentication Confirmed");
-//    }
+    @RequestMapping(value = "/checkSessions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
+        MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity checkSessions(@RequestBody Map<String, String> req) {
+        String username = req.get("username");
+        String id = req.get("sessionID");
+        System.out.println("user --------------------- " + username);
+        System.out.println("ID --------------------- " + id);
+
+        try {
+            RedisHandler redis = new RedisHandler();
+            Map<String, Object> result = new HashMap<String, Object>();
+            String role;
+            try {
+                role = userRepository.findByusername(username).getRole();
+            } catch (NullPointerException ex) {
+                System.out.println("user not found!");
+                result.put("authenticated", false);
+                return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+            }
+            result = redis.findSessions(id, role);
+
+            if ((Boolean) result.get("authenticated")) {
+                System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
+                return ResponseEntity.ok(result);
+            } else {
+                return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex) {
+            System.out.println("error:" + ex);
+            return new ResponseEntity<>("Redis Error", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+    }
 
 }
