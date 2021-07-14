@@ -118,7 +118,7 @@ public class AuthenticationController {
         System.out.println("user:"+username);
         RedisHandler redis = new RedisHandler();
         try {
-            redis.findSessions(id);
+            redis.generateJedisPoolFactory();
         } catch (Exception ex) {
             System.out.println("error:"+ex);
             //Logger.getLogger(AuthenticationController.class.getName()).log(Level.SEVERE, null, ex);
