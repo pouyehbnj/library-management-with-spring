@@ -114,26 +114,26 @@ public class AuthenticationController {
         return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/checkSessions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    ResponseEntity checkSessions(@RequestBody Map<String, String> req) {
-        String username = req.get("username");
-        String id = req.get("sessionID");
-        System.out.println("user --------------------- " + username);
-        System.out.println("ID --------------------- " + id);
-
-        try {
-            RedisHandler redis = new RedisHandler();
-            redis.findSessions(id);
-            
-        } catch (Exception ex) {
-            System.out.println("error:" + ex);
-            return new ResponseEntity<>("Redis Error", HttpStatus.INTERNAL_SERVER_ERROR);
-            // Logger.getLogger(AuthenticationController.class.getName()).log(Level.SEVERE,
-            // null, ex);
-        }
-        System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
-        return ResponseEntity.ok("Authentication Confirmed");
-    }
+//    @RequestMapping(value = "/checkSessions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
+//            MediaType.APPLICATION_JSON_VALUE })
+//    ResponseEntity checkSessions(@RequestBody Map<String, String> req) {
+//        String username = req.get("username");
+//        String id = req.get("sessionID");
+//        System.out.println("user --------------------- " + username);
+//        System.out.println("ID --------------------- " + id);
+//
+//        try {
+//            RedisHandler redis = new RedisHandler();
+//            redis.findSessions(id);
+//            
+//        } catch (Exception ex) {
+//            System.out.println("error:" + ex);
+//            return new ResponseEntity<>("Redis Error", HttpStatus.INTERNAL_SERVER_ERROR);
+//            // Logger.getLogger(AuthenticationController.class.getName()).log(Level.SEVERE,
+//            // null, ex);
+//        }
+//        System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
+//        return ResponseEntity.ok("Authentication Confirmed");
+//    }
 
 }
