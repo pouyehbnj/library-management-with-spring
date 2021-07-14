@@ -24,8 +24,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.library.authentication.SampleAuthenticationManager;
+import com.library.authentication.Test;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,11 +74,11 @@ public class AuthenticationController {
 
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
-        System.out.println("user:" +username);
-        System.out.println("role:"+userRepository.findByusername(username).getRole());
-        System.out.println("user:" +username);
-        
-        AuthenticationManager authenticationManager = new SampleAuthenticationManager(userRepository.findByid(1).getRole());
+        System.out.println("user:" + username);
+        System.out.println("role:" + userRepository.findByusername(username).getRole());
+        System.out.println("user:" + username);
+
+        AuthenticationManager authenticationManager = new SampleAuthenticationManager(userRepository.findByusername(username).getRole());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = (Authentication) authenticationManager.authenticate(token);
         SecurityContextHolder
@@ -83,12 +87,21 @@ public class AuthenticationController {
 
         Collection<? extends Session> usersSessions = sessions.findByPrincipalName(principal.getName()).values();
         for (Session session : usersSessions) {
+            session.setAttribute(username, userRepository.findByusername(username));
             System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
 
         }
-
+        Test test = new Test();
+        try {
+            test.testSessionIdKeys(username);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            System.out.println("error ! u need to sleep now");
+        }
         return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
     }
+
+    
 
     @RequestMapping("/sessions")
     public String index(Principal principal) {
