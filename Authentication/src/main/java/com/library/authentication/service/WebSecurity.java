@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.library.authentication;
+package com.library.authentication.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,6 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -33,24 +32,20 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable() // we don't care for CSRF in this example
-//                .formLogin()
-//                .and()
-//                .authorizeRequests()
-//                .anyRequest()
-//                .authenticated();
-   http
-            .sessionManagement()
-           //.maximumSessions(1).sessionRegistry(sessionRegistry())
-            .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-            .and()
-            .csrf()
-            .disable()
-            .authorizeRequests()
-            .anyRequest()
-            .permitAll();
+        // http
+        // .csrf().disable() // we don't care for CSRF in this example
+        // .formLogin()
+        // .and()
+        // .authorizeRequests()
+        // .anyRequest()
+        // .authenticated();
+        http.sessionManagement()
+                // .maximumSessions(1).sessionRegistry(sessionRegistry())
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and().csrf().disable().authorizeRequests()
+                .anyRequest().permitAll();
+
     }
+
     @Autowired
     UserDetailsService userDetailsService;
 
@@ -69,8 +64,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    
-     @Bean
+
+    @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
     }

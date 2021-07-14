@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.library.authentication;
+package com.library.authentication.service;
 
 import java.util.Map;
 import java.util.Set;
@@ -11,19 +11,19 @@ import redis.clients.jedis.Jedis;
 
 /**
  *
- * @author ASUS
+ * @author Pouyeh
  */
-public class Test {
+public class RedisHandler {
 
-    public void testSessionIdKeys(String username) throws Exception {
+    public void findSessions(String ID) throws Exception {
 //       
 //        JedisPoolConfig config = new JedisPoolConfig();
 //        Jedis jedis= new Jedis(config,"37,152.138.117", 6379);
         //jedisPool.setMaxTotal("300"); 
         //redis.clients.jedis.Jedis jedis = jedisPool.getResource();
-        try (Jedis jedis = new Jedis("37.152.138.117", 6379,3000)) {
+        try (Jedis jedis = new Jedis("37.152.138.117", 6379,180000)) {
             jedis.connect();
-            String sessionId = "spring:session:sessions:" + username;
+            String sessionId = "spring:session:sessions:" + ID;
             Boolean exists = jedis.exists(sessionId);
             if (!exists) {
                 return;
