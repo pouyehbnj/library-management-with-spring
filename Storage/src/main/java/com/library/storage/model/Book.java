@@ -88,7 +88,7 @@ public class Book {
         return author;
     }
 
-    public Book(int id, String ISSN, String title, String publisher, String author, String publishYear, String image, Date createdAt) {
+    public Book(String ISSN, String title, String publisher, String author, String publishYear, String image){ //,Date createdAt) {
         this.id = id;
         this.ISSN = ISSN;
         this.title = title;
@@ -96,7 +96,7 @@ public class Book {
         this.author = author;
         this.publishYear = publishYear;
         this.image = image;
-        this.createdAt = createdAt;
+        //this.createdAt = createdAt;
     }
 
 }

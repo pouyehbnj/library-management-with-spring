@@ -1,5 +1,6 @@
 package com.library.authentication.controller;
 
+import com.library.authentication.model.User;
 import com.library.authentication.repository.UserRepository;
 import com.library.authentication.service.SampleAuthenticationManager;
 import com.library.authentication.service.RedisHandler;
@@ -75,38 +76,54 @@ public class AuthenticationController {
 
         String username = loginRequest.get("username");
         String password = loginRequest.get("password");
-
-        System.out.println("user:" + username);
-        System.out.println("role:" + userRepository.findByusername(username).getRole());
-
-        AuthenticationManager authenticationManager = new SampleAuthenticationManager(
-                userRepository.findByusername(username).getRole());
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authentication = (Authentication) authenticationManager.authenticate(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         try {
-            // Collection<? extends Session> usersSessions =
-            // sessions.findByPrincipalName(principal.getName()).values();
-            // for (Session session : usersSessions) {
-            // System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
-            Collection<? extends Session> usersSessions = sessions.findByPrincipalName(principal.getName()).values();
+            User user = userRepository.findByusername(username);
 
-            //
-            Cookie cookie = new Cookie("sessionID", RequestContextHolder.currentRequestAttributes().getSessionId());
-            response.addCookie(cookie);
-            cookie = new Cookie("username", username);
-            response.addCookie(cookie);
-            System.out.println("session id:" + RequestContextHolder.currentRequestAttributes().getSessionId());
+            if (user.getPassword().equals(password)) {
+                System.out.println("user:" + username);
+                System.out.println("role:" + user.getRole());
+                System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
+//                try{
+//                AuthenticationManager authenticationManager = new SampleAuthenticationManager(
+//                        user.getRole());
+//                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+//                Authentication authentication = (Authentication) authenticationManager.authenticate(token);
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                }catch(Exception e){
+//                    System.out.println("error:"+e);
+//                }
+                
+                //try {
+                // Collection<? extends Session> usersSessions =
+                // sessions.findByPrincipalName(principal.getName()).values();
+                // for (Session session : usersSessions) {
+                // System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
+                //Collection<? extends Session> usersSessions = sessions.findByPrincipalName(principal.getName()).values();
+                //
+                Cookie cookie = new Cookie("sessionID", RequestContextHolder.currentRequestAttributes().getSessionId());
+                response.addCookie(cookie);
+                cookie = new Cookie("username", username);
+                response.addCookie(cookie);
+                System.out.println("session id:" + RequestContextHolder.currentRequestAttributes().getSessionId());
+                return new ResponseEntity<>(username, HttpStatus.OK);
 
-            for (Session session : usersSessions) {
-                System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
+            } else {
+                return new ResponseEntity<>(username, HttpStatus.UNAUTHORIZED);
 
             }
-        } catch (Exception exception) {
-
-            return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(username, HttpStatus.UNAUTHORIZED);
         }
+
+//
+//            for (Session session : usersSessions) {
+//                System.out.println(session.getAttribute("SPRING_SECURITY_CONTEXT").toString());
+//
+//            }
+//        } catch (Exception exception) {
+//
+//            return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
+//        }
         // Test test = new Test();
         // try {
         // test.testSessionIdKeys(username);
@@ -114,7 +131,6 @@ public class AuthenticationController {
         // System.out.println(ex);
         // System.out.println("error ! u need to sleep now");
         // }
-        return new ResponseEntity<>(authentication.getPrincipal(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/checkSessions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
