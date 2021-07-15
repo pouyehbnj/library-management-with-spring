@@ -25,10 +25,11 @@ import javax.persistence.TemporalType;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy =GenerationType.TABLE)
+            //GenerationType.IDENTITY)
 // GenerationType.AUTO)
-    @Column(name = "id",updatable = false, nullable = false)
-    private int  id;
+    //@Column(name = "id",updatable = false, nullable = false)
+    public Long  id;
 
     @Column(name = "ISSN")
     private String ISSN;
@@ -57,7 +58,7 @@ public class Book {
         createdAt = new Date();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -88,6 +89,40 @@ public class Book {
     public String getAuthor() {
         return author;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setISSN(String ISSN) {
+        this.ISSN = ISSN;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setPublishYear(String publishYear) {
+        this.publishYear = publishYear;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    
 
     public Book(String ISSN, String title, String publisher, String author, String publishYear, String image){ //,Date createdAt) {
        // this.id = id;

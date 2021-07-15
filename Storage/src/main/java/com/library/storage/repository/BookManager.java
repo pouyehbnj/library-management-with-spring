@@ -18,6 +18,9 @@ import javax.transaction.Transactional;
 public class BookManager {
     @Transactional
     public void insertBook(String ISSN, String title, String publisher, String author, String publishYear, String image) {
+        try{
+            
+        
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("Book_details");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
@@ -25,5 +28,8 @@ public class BookManager {
         em.persist(book);
 
         em.getTransaction().commit();
+        }catch(Exception e){
+            System.out.println("error:"+e);
+        }
     }
 }

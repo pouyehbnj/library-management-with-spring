@@ -4,6 +4,7 @@ package com.library.storage.controller;/*
  * and open the template in the editor.
  */
 
+import com.library.storage.model.Book;
 import com.library.storage.repository.BookManager;
 import com.library.storage.repository.BookRepository;
 import com.library.storage.service.AuthenticationManager;
@@ -58,13 +59,16 @@ public class StorageController {
 
             if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
 
-                BookManager book = new BookManager();
-                book.insertBook(req.get("ISSN"), req.get("title"), req.get("publisher"),
+//                BookManager book = new BookManager();
+//                book.insertBook(req.get("ISSN"), req.get("title"), req.get("publisher"),
+//                        req.get("author"), req.get("publishYear"), req.get("image"));
+                Book book = new Book(req.get("ISSN"), req.get("title"), req.get("publisher"),
                         req.get("author"), req.get("publishYear"), req.get("image"));
-                result.put("success", true);
-                System.out.println("the book:"+bookRepository.findByTitleAndPublisher(req.get("publisher"),
-                        req.get("title")));
-                return ResponseEntity.ok(result);
+                bookRepository.save(book);
+                //result.put("success", true);
+//                System.out.println("the book:"+bookRepository.findByTitleAndPublisher(req.get("publisher"),
+//                        req.get("title")));
+                return new ResponseEntity<>(req,HttpStatus.CREATED);
 
             } else {
                 result.put("succes", false);
