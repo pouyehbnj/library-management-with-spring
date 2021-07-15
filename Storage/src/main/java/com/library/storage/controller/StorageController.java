@@ -12,6 +12,7 @@ import java.util.Arrays;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -80,29 +82,38 @@ public class StorageController {
 
         //return "greeting";
     }
+
     @GetMapping("/showBooks")
-    public Page<Book> showBooks(@RequestParam(name = "page", required = true) String page,
-            @RequestParam(name = "size", required = false, defaultValue = "10") String size,
+    public ModelAndView showBooks(@RequestParam(name = "page", required = true) String page,
+            @RequestParam(name = "size", required = false, defaultValue = "1") String size,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
+        System.out.println("page:" + page + " size:" + size);
+        List<Book> booksList=null;
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             if (jsonResponse.getBoolean("authenticated")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
-                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page), Integer.valueOf(size));
+                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page)-1, Integer.valueOf(size));
                 Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
-                for(Object book:books.toList().toArray())
-                System.out.println(book);
-                return books;
+                booksList = books.getContent();
+             //   model.addAttribute(books);
+//                for(Book book:booksList)
+//                System.out.println(book.getPublisher());
+
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
         }
-
-        //model.addAttribute("name", name);
+        Map<String, Object> response = new HashMap<String, Object>();
         
+        response.put("books", booksList);
+        return new ModelAndView("books", response);
+        
+        //return "greeting";        
+
     }
 
 //    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
