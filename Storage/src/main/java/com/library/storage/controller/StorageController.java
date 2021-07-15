@@ -8,11 +8,16 @@ import com.library.storage.model.Book;
 import com.library.storage.repository.BookManager;
 import com.library.storage.repository.BookRepository;
 import com.library.storage.service.AuthenticationManager;
+import java.util.Arrays;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,13 +38,14 @@ import org.springframework.web.client.RestTemplate;
  */
 @Controller
 public class StorageController {
+
     @Autowired
     BookRepository bookRepository;
-    
+
     @RequestMapping(value = "/addBook", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
         MediaType.APPLICATION_JSON_VALUE})
-    
-    public ResponseEntity greeting(@RequestBody Map<String, String> req,
+
+    public ResponseEntity addBooks(@RequestBody Map<String, String> req,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
@@ -48,27 +54,18 @@ public class StorageController {
         System.err.println(req.get("ISSN"));
         AuthenticationManager manager = new AuthenticationManager();
         Map<String, Object> result = new HashMap<String, Object>();
-//        JSONObject jsonResponse = manager.AuthenticationUser(username, session);
-//            String role = jsonResponse.getString("role");
-//            System.out.println("user role:" + role);
+
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             String role = jsonResponse.getString("role");
             System.out.println("user role:" + role);
-            
 
             if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
-
-//                BookManager book = new BookManager();
-//                book.insertBook(req.get("ISSN"), req.get("title"), req.get("publisher"),
-//                        req.get("author"), req.get("publishYear"), req.get("image"));
                 Book book = new Book(req.get("ISSN"), req.get("title"), req.get("publisher"),
                         req.get("author"), req.get("publishYear"), req.get("image"));
                 bookRepository.save(book);
-                //result.put("success", true);
-//                System.out.println("the book:"+bookRepository.findByTitleAndPublisher(req.get("publisher"),
-//                        req.get("title")));
-                return new ResponseEntity<>(req,HttpStatus.CREATED);
+
+                return new ResponseEntity<>(req, HttpStatus.CREATED);
 
             } else {
                 result.put("succes", false);
@@ -77,11 +74,35 @@ public class StorageController {
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
             result.put("succes", false);
-            return new ResponseEntity<>(result,  HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 
         //return "greeting";
+    }
+    @GetMapping("/showBooks")
+    public Page<Book> showBooks(@RequestParam(name = "page", required = true) String page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") String size,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
+        AuthenticationManager manager = new AuthenticationManager();
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            if (jsonResponse.getBoolean("authenticated")) {
+                System.out.println("user role:" + jsonResponse.getString("role"));
+                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page), Integer.valueOf(size));
+                Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
+                for(Object book:books.toList().toArray())
+                System.out.println(book);
+                return books;
+            }
+        } catch (NullPointerException e) {
+            System.err.println("error with authentication module!");
+        }
+
+        //model.addAttribute("name", name);
+        
     }
 
 //    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
