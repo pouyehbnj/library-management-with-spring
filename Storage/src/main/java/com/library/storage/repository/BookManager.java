@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 public class BookManager {
     @Transactional
     public void insertBook(String ISSN, String title, String publisher, String author, String publishYear, String image) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("User_details");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Book_details");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         Book book = new Book("1234","test","test","1377","test","book");

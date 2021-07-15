@@ -93,6 +93,11 @@
             <version>0.0.20131108.vaadin1</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.2.6.Final</version>
+        </dependency>
     </dependencies>
 
     <build>

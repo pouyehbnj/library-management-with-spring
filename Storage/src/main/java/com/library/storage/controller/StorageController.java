@@ -35,18 +35,26 @@ public class StorageController {
     @Autowired
     BookRepository bookRepository;
     
-    @RequestMapping(value = "/addBooks", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
+    @RequestMapping(value = "/addBook", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
         MediaType.APPLICATION_JSON_VALUE})
+    
     public ResponseEntity greeting(@RequestBody Map<String, String> req,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
+        System.out.println("user --------------------- " + username);
+        System.out.println("ID --------------------- " + session);
+        System.err.println(req.get("ISSN"));
         AuthenticationManager manager = new AuthenticationManager();
         Map<String, Object> result = new HashMap<String, Object>();
+//        JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+//            String role = jsonResponse.getString("role");
+//            System.out.println("user role:" + role);
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             String role = jsonResponse.getString("role");
             System.out.println("user role:" + role);
+            
 
             if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
 

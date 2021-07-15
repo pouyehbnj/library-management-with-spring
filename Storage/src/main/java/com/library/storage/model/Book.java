@@ -25,9 +25,10 @@ import javax.persistence.TemporalType;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private int id;
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
+// GenerationType.AUTO)
+    @Column(name = "id",updatable = false, nullable = false)
+    private int  id;
 
     @Column(name = "ISSN")
     private String ISSN;
@@ -89,7 +90,7 @@ public class Book {
     }
 
     public Book(String ISSN, String title, String publisher, String author, String publishYear, String image){ //,Date createdAt) {
-        this.id = id;
+       // this.id = id;
         this.ISSN = ISSN;
         this.title = title;
         this.publisher = publisher;
