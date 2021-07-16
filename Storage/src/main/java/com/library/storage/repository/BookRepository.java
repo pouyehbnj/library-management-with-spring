@@ -8,6 +8,7 @@ package com.library.storage.repository;
 import com.library.storage.model.Book;
 import java.awt.print.Pageable;
 import java.util.List;
+import org.jboss.logging.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -16,7 +17,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @author Pouyeh
  */
 public interface BookRepository extends JpaRepository<Book, Long>{
-
+    
+   // Book findByid(@Param("id") int id);
     //Book findByTitleAndPublisher(String title, String publisher);
  
  

@@ -9,11 +9,13 @@ import com.library.storage.repository.BookManager;
 import com.library.storage.repository.BookRepository;
 import com.library.storage.service.AuthenticationManager;
 import java.util.Arrays;
+import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,24 +89,24 @@ public class StorageController {
     }
 
     @GetMapping("/showBooks")
-    public ModelAndView showBooks(@RequestParam(name = "page", required = true) String page,
+    public ModelAndView showBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
             @RequestParam(name = "size", required = false, defaultValue = "5") String size,
-            @RequestParam(name = "filter",  required = true) String filter,
+            @RequestParam(name = "filter", required = false, defaultValue = "createdAt") String filter,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
         System.out.println("page:" + page + " size:" + size);
-        List<Book> booksList=null;
+        List<Book> booksList = null;
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             if (jsonResponse.getBoolean("authenticated")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
-                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page)-1, Integer.valueOf(size),
+                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page) - 1, Integer.valueOf(size),
                         Sort.by(filter).descending());
                 Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
                 booksList = books.getContent();
-             //   model.addAttribute(books);
+                //   model.addAttribute(books);
 //                for(Book book:booksList)
 //                System.out.println(book.getPublisher());
 
@@ -111,12 +115,84 @@ public class StorageController {
             System.err.println("error with authentication module!");
         }
         Map<String, Object> response = new HashMap<String, Object>();
-        
+
         response.put("books", booksList);
         return new ModelAndView("books", response);
-        
-        //return "greeting";        
 
+        //return "greeting";        
+    }
+
+    @GetMapping("/book/{id}")
+    public ModelAndView bookDetails(@PathVariable String id,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
+        AuthenticationManager manager = new AuthenticationManager();
+        Book book = null;
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            if (jsonResponse.getBoolean("authenticated")) {
+                System.out.println("user role:" + jsonResponse.getString("role"));
+                Optional<Book> bookDetails = bookRepository.findById(Long.valueOf(id));
+                book = bookDetails.get();
+                System.err.println("got it :" + book.getTitle());
+                //   model.addAttribute(books);
+//                for(Book book:booksList)
+//                System.out.println(book.getPublisher());
+
+            }else{
+                //result.put("succes", false);
+                //@TODO --> CHANGE TO UNAUTHORIZED
+                return new ModelAndView("book");
+            }
+        } catch (NullPointerException e) {
+            System.err.println("error with authentication module!");
+        }
+        Map<String, Object> response = new HashMap<String, Object>();
+
+        response.put("book", book);
+        return new ModelAndView("book", response);
+
+        //return "greeting";        
+    }
+
+    @GetMapping("/update/{id}")
+    public ModelAndView showUpdateForm(@PathVariable("id") Long id,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
+        AuthenticationManager manager = new AuthenticationManager();
+        Book book = null;
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
+            if (jsonResponse.getBoolean("authenticated")&& role.equals("publisher")) {
+                System.out.println("user role:" + jsonResponse.getString("role"));
+                Optional<Book> bookDetails = bookRepository.findById(id);
+                book = bookDetails.get();
+                System.err.println("got it :" + book.getTitle());
+
+            }
+        } catch (NullPointerException e) {
+            System.err.println("error with authentication module!");
+        }
+        Map<String, Object> response = new HashMap<String, Object>();
+
+        response.put("book", book);
+        return new ModelAndView("update-book", response);
+
+    }
+
+    @RequestMapping("/update-book/{id}")
+    public String updateBook(@PathVariable("id") Long id, Book book, BindingResult result, Model model) {
+        book.setId(id);
+        book.setCreatedAt(new Date());
+        System.out.println("title"+book.getTitle());
+        System.out.println("creat at"+book.getCreatedAt());
+       
+        bookRepository.save(book);
+        
+        return "redirect:/showBooks";
     }
 
 //    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
