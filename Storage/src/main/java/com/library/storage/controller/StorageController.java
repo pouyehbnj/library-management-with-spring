@@ -1,8 +1,8 @@
 package com.library.storage.controller;/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+                                       * To change this license header, choose License Headers in Project Properties.
+                                       * To change this template file, choose Tools | Templates
+                                       * and open the template in the editor.
+                                       */
 
 import com.library.storage.model.Book;
 import com.library.storage.repository.BookManager;
@@ -49,12 +49,37 @@ public class StorageController {
     @Autowired
     BookRepository bookRepository;
 
-    @RequestMapping(value = "/addBook", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = {
-        MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping("/addBook")
+    public ModelAndView addBooks(@CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session) {
 
-    public ResponseEntity addBooks(@RequestBody Map<String, String> req,
-            @CookieValue(value = "username") String username,
-            @CookieValue(value = "sessionID") String session,
+        AuthenticationManager manager = new AuthenticationManager();
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
+            System.out.println("user role:" + role);
+
+            if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
+
+                return new ModelAndView("addBook");
+            } else {
+                result.put("succes", false);
+                return new ModelAndView("401");
+            }
+        } catch (Exception e) {
+            System.err.println("error with authentication module!" + e.getMessage());
+            result.put("succes", false);
+            return new ModelAndView("500");
+
+        }
+    }
+
+    @RequestMapping(value = "/addBook", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+            MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ModelAndView addBooks(@RequestParam Map<String, String> req,
+            @CookieValue(value = "username") String username, @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
         System.out.println("user --------------------- " + username);
         System.out.println("ID --------------------- " + session);
@@ -68,24 +93,26 @@ public class StorageController {
             System.out.println("user role:" + role);
 
             if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
-                Book book = new Book(req.get("ISSN"), req.get("title"), req.get("publisher"),
-                        req.get("author"), req.get("publishYear"), req.get("image"));
+                Book book = new Book(req.get("ISSN"), req.get("title"), req.get("publisher"), req.get("author"),
+                        req.get("publishYear"), req.get("image"));
+                System.out.println(req);
+
                 bookRepository.save(book);
 
-                return new ResponseEntity<>(req, HttpStatus.CREATED);
+                return new ModelAndView("201");
 
             } else {
                 result.put("succes", false);
-                return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+                return new ModelAndView("401");
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
             result.put("succes", false);
-            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ModelAndView("500");
 
         }
 
-        //return "greeting";
+        // return "greeting";
     }
 
     @GetMapping("/showBooks")
@@ -195,21 +222,22 @@ public class StorageController {
         return "redirect:/showBooks";
     }
 
-//    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
-//            @CookieValue(value = "username") String username,
-//            @CookieValue(value = "sessionID") String session,
-//            Model model) throws JSONException {
-//        AuthenticationManager manager = new AuthenticationManager();
-//        try{
-//            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
-//            if(jsonResponse.getBoolean("authenticated")){
-//                System.out.println("user role:"+jsonResponse.getString("role"));
-//            }
-//        }catch(NullPointerException e){
-//            System.err.println("error with authentication module!");
-//        }
-//        
-//        model.addAttribute("name", name);
-//        return "greeting";
-//    }
+    // public String greeting(@RequestParam(name = "name", required = false,
+    // defaultValue = "World") String name,
+    // @CookieValue(value = "username") String username,
+    // @CookieValue(value = "sessionID") String session,
+    // Model model) throws JSONException {
+    // AuthenticationManager manager = new AuthenticationManager();
+    // try{
+    // JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+    // if(jsonResponse.getBoolean("authenticated")){
+    // System.out.println("user role:"+jsonResponse.getString("role"));
+    // }
+    // }catch(NullPointerException e){
+    // System.err.println("error with authentication module!");
+    // }
+    //
+    // model.addAttribute("name", name);
+    // return "greeting";
+    // }
 }
