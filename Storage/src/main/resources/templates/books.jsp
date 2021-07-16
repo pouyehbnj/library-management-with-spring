@@ -64,7 +64,7 @@
 
 <!--        <div th:if="${noOfPages > 0}" class="pagination"
              th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/showBooks(page=${pageNumber},size=${size})}"
+            <a th:href="@{/books(page=${pageNumber},size=${size})}"
                th:text=${pageNumber}
                th:class="${pageNumber==currentPage + 1} ? active"></a>
         </div>-->
@@ -74,7 +74,7 @@
             <ul class="pagination justify-content-center font-weight-bold">
                 <li class="page-item" th:classappend="${currentPage eq 0} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/showBooks?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
+                       th:href="@{/books?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
                        aria-label="Previous" title="Previous Page" data-toggle="tooltip">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
@@ -82,12 +82,12 @@
 
                 <li class="page-item" th:classappend="${i eq currentPage + 1} ? 'active'"
                     th:each="i : ${#numbers.sequence( 1, noOfPages, 1)}">
-                    <a class="page-link" th:href="@{/showBooks?page={id}(id=${i})}" th:text="${i}"
+                    <a class="page-link" th:href="@{/books?page={id}(id=${i})}" th:text="${i}"
                        th:title="${'Page '+ i}" data-toggle="tooltip"></a>
                 </li>
                 <li class="page-item" th:classappend="${currentPage + 1 eq noOfPages} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/showBooks?page={id}(id=${currentPage + 2})}"
+                       th:href="@{/books?page={id}(id=${currentPage + 2})}"
                        aria-label="Next" title="Next Page" data-toggle="tooltip">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
@@ -99,7 +99,7 @@
                     <ul class="pagination justify-content-center font-weight-medium">
                         <li class="page-item" th:classappend="${currentPage eq 0} ? 'disabled'">
                             <a class="page-link svg-icon"
-                               th:href="@{/showBooks?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
+                               th:href="@{/books?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
                                aria-label="Previous"
                                title="Previous Page" rel="tooltip">
                                 <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20"></span>
@@ -107,7 +107,7 @@
                         </li>
                         <li class="page-item" th:classappend="${i eq currentPage + 1} ? 'active'"
                             th:each="i : ${#numbers.sequence( currentPage+ 1, noOfPages > 10 + currentPage ? currentPage + size : noOfPages, 1)}">
-                            <a class="page-link" th:href="@{/showBooks?page={id}(id=${i})}" th:text="${i}"
+                            <a class="page-link" th:href="@{/books?page={id}(id=${i})}" th:text="${i}"
                                th:title="${'Page '+ i}"
                                rel="tooltip"></a>
                         </li>
@@ -117,7 +117,7 @@
                             </a>
                         </li>
                         <li class="page-item" th:classappend="${currentPage + 1 eq noOfPages} ? 'disabled'">
-                            <a class="page-link svg-icon" th:href="@{/showBooks?page={id}(id=${currentPage + 2})}"
+                            <a class="page-link svg-icon" th:href="@{/books?page={id}(id=${currentPage + 2})}"
                                aria-label="Next"
                                title="Next Page" rel="tooltip">
                                 <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20"></span>
