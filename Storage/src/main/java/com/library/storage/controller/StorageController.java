@@ -16,15 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,14 +32,10 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  *
@@ -119,7 +115,7 @@ public class StorageController {
 
     @GetMapping("/books")
     public ModelAndView showBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(name = "size", required = false, defaultValue = "5") String size,
+            @RequestParam(name = "size", required = false, defaultValue = "1") String size,
             @RequestParam(name = "filter", required = false, defaultValue = "createdAt") String filter,
             @CookieValue(value = "username") String username, @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
@@ -161,9 +157,9 @@ public class StorageController {
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
-            return new ModelAndView("500");
+            return new ModelAndView("401");
         }
-        return new ModelAndView("500");
+        return new ModelAndView("401");
 
         // return "greeting";
     }
@@ -180,17 +176,14 @@ public class StorageController {
                 Optional<Book> bookDetails = bookRepository.findById(Long.valueOf(id));
                 book = bookDetails.get();
                 System.err.println("got it :" + book.getTitle());
-                // model.addAttribute(books);
-                // for(Book book:booksList)
-                // System.out.println(book.getPublisher());
 
             } else {
-                // result.put("succes", false);
-                // @TODO --> CHANGE TO UNAUTHORIZED
-                return new ModelAndView("book");
+                return new ModelAndView("401");
+
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
+            return new ModelAndView("401");
         }
         Map<String, Object> response = new HashMap<String, Object>();
 

@@ -156,6 +156,7 @@ public class AuthenticationController {
                 System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
                 return ResponseEntity.ok(result);
             } else {
+                System.out.println("authenticated:"+result.get("authenticated"));
                 return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception ex) {
