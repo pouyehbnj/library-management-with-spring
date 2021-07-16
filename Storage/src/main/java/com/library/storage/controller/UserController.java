@@ -212,7 +212,7 @@ public class UserController {
     @RequestMapping("/update-user/{id}")
     public String updateUser(@PathVariable("id") Long id, User user, BindingResult result, Model model) {
         user.setId(id);
-        System.out.println("title" + user.getUsername());
+        System.out.println("username" + user.getUsername());
 
         userRepository.save(user);
 
