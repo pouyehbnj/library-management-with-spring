@@ -92,7 +92,7 @@ public class AuthenticationController {
 
                 String role = user.getRole();
                 if (role.equals("admin")){
-                    return new ModelAndView("redirect:http://localhost:8002/book/add");
+                    return new ModelAndView("redirect:http://localhost:8002/users");
 
                 }
                     else if(role.equals("publisher")){
