@@ -17,36 +17,34 @@
                 <h1>Printemps Library</h1>
             </Center>
 
-
-            <h2>Login</h2>
+            <h2>Choose</h2>
 
             <div class="card">
                 <div class="card-body">
                     <div class="col-md-10">
                         <form method="POST" action="/login">
                             <div class="row">
-
-                                <div class="form-group col-md-8">
-                                    <label for="isbn" class="col-form-label">Username</label>
-                                    <input type="text" name="username" class="form-control" placeholder="Username" />
-                                </div>
-
-                                <div class="form-group col-md-8">
-                                    <label for="name" class="col-form-label">Password</label>
-                                    <input type="password" name="password" class="form-control"
-                                        placeholder="Password" />
-
-                                </div>
-
-
-
                                 <div class="col-md-6">
                                     <input type="submit" class="btn btn-primary" name="submit" />
                                 </div>
-
-
                             </div>
                         </form>
+                        <form method="GET" action="http://localhost:8002/addBook">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="submit" class="btn btn-primary" name="submit" />
+                                </div>
+                            </div>
+                        </form>
+
+                        <form method="POST" action="/add">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="submit" class="btn btn-primary" name="submit" />
+                                </div>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
             </div>

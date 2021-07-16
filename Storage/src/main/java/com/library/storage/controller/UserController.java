@@ -1,12 +1,7 @@
-package com.library.storage.controller;/*
-                                       * To change this license header, choose License Headers in Project Properties.
-                                       * To change this template file, choose Tools | Templates
-                                       * and open the template in the editor.
-                                       */
+package com.library.storage.controller;
 
-import com.library.storage.model.Book;
-import com.library.storage.repository.BookManager;
-import com.library.storage.repository.BookRepository;
+import com.library.storage.model.User;
+import com.library.storage.repository.UserRepository;
 import com.library.storage.service.AuthenticationManager;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,21 +33,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-/**
- *
- * @author ASUS
- */
+
+
 @Controller
-public class StorageController {
 
+public class UserController {
+    
     @Autowired
-    BookRepository bookRepository;
+    UserRepository userRepository;
 
-    @GetMapping("/book/add")
-    public ModelAndView addBooks(@CookieValue(value = "username") String username,
+    @GetMapping("/user/add")
+    public ModelAndView addUsers(@CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session) {
 
         AuthenticationManager manager = new AuthenticationManager();
@@ -63,9 +55,9 @@ public class StorageController {
             String role = jsonResponse.getString("role");
             System.out.println("user role:" + role);
 
-            if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
+            if (jsonResponse.getBoolean("authenticated") && role.equals("admin")) {
 
-                return new ModelAndView("addBook");
+                return new ModelAndView("addUser");
             } else {
                 result.put("succes", false);
                 return new ModelAndView("401");
@@ -78,9 +70,9 @@ public class StorageController {
         }
     }
 
-    @RequestMapping(value = "/book/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
-            MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public ModelAndView addBooks(@RequestParam Map<String, String> req,
+    @RequestMapping(value = "/user/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+        MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView addUsers(@RequestParam Map<String, String> req,
             @CookieValue(value = "username") String username, @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
         System.out.println("user --------------------- " + username);
@@ -94,16 +86,15 @@ public class StorageController {
             String role = jsonResponse.getString("role");
             System.out.println("user role:" + role);
 
-            if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
-                Book book = new Book(req.get("ISSN"), req.get("title"), req.get("publisher"), req.get("author"),
-                        req.get("publishYear"), req.get("image"));
+            if (jsonResponse.getBoolean("authenticated") && role.equals("admin")) {
+                User user = new User(req.get("role"), req.get("username"), req.get("password"));
                 System.out.println(req);
 
-                bookRepository.save(book);
+                userRepository.save(user);
 
-                return new ModelAndView("redirect:/books");
+                return new ModelAndView("redirect:/users");
+
             } else {
-
                 result.put("succes", false);
                 return new ModelAndView("401");
             }
@@ -117,102 +108,92 @@ public class StorageController {
         // return "greeting";
     }
 
-    @GetMapping("/books")
-    public ModelAndView showBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
+    @GetMapping("/users")
+    public ModelAndView users(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
             @RequestParam(name = "size", required = false, defaultValue = "5") String size,
-            @RequestParam(name = "filter", required = false, defaultValue = "createdAt") String filter,
-            @CookieValue(value = "username") String username, @CookieValue(value = "sessionID") String session,
+            @RequestParam(name = "filter", required = false, defaultValue = "role") String filter,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
         System.out.println("page:" + page + " size:" + size);
-        List<Book> booksList = null;
-        JSONObject jsonResponse = null;
+        List<User> usersList = null;
         try {
-            jsonResponse = manager.AuthenticationUser(username, session);
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             if (jsonResponse.getBoolean("authenticated")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
                 Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page) - 1, Integer.valueOf(size),
                         Sort.by(filter).descending());
-                Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
-                booksList = books.getContent();
-                // model.addAttribute(books);
-                // for(Book book:booksList)
-                // System.out.println(book.getPublisher());
-                Map<String, Object> response = new HashMap<String, Object>();
+                Page<User> users = (Page<User>) userRepository.findAll(pages);
+                usersList = users.getContent();
+                //   model.addAttribute(users);
+//                for(User user:usersList)
+//                System.out.println(user.getPublisher());
 
-                response.put("books", booksList);
-                response.put("currentPage", books.getNumber() + 1);
-                System.out.println("number:" + books.getNumber());
-                response.put("noOfPages", books.getTotalPages());
-                System.out.println("noOfPages:" + books.getTotalPages());
-                response.put("totalElements", books.getTotalElements());
-                System.out.println("totalElements:" + books.getTotalElements());
-                response.put("size", books.getSize());
-                System.out.println("size:" + books.getSize());
-                response.put("books", booksList);
-                List<Integer> pageNumbers = IntStream.rangeClosed(1, books.getTotalPages()).boxed()
-                        .collect(Collectors.toList());
-                response.put("pageNumbers", pageNumbers);
-
-                if (jsonResponse.getString("role").equals("user")) {
-                    return new ModelAndView("books-user", response);
-                }
-                return new ModelAndView("books", response);
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
-            return new ModelAndView("500");
         }
-        return new ModelAndView("500");
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("users", usersList);
 
-        // return "greeting";
+        for (Map.Entry<String, Object> entry : response.entrySet()) {
+            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+       }
+        return new ModelAndView("users", response);
+
+        //return "greeting";        
     }
 
-    @GetMapping("/book/{id}")
-    public ModelAndView bookDetails(@PathVariable String id, @CookieValue(value = "username") String username,
-            @CookieValue(value = "sessionID") String session, Model model) throws JSONException {
+    @GetMapping("/user/{id}")
+    public ModelAndView userDetails(@PathVariable String id,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
-        Book book = null;
+        User user = null;
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             if (jsonResponse.getBoolean("authenticated")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
-                Optional<Book> bookDetails = bookRepository.findById(Long.valueOf(id));
-                book = bookDetails.get();
-                System.err.println("got it :" + book.getTitle());
-                // model.addAttribute(books);
-                // for(Book book:booksList)
-                // System.out.println(book.getPublisher());
+                Optional<User> userDetails = userRepository.findById(Long.valueOf(id));
+                user = userDetails.get();
+                System.err.println("got it :" + user.getUsername());
+                //   model.addAttribute(users);
+//                for(User user:usersList)
+//                System.out.println(user.getPublisher());
 
             } else {
-                // result.put("succes", false);
-                // @TODO --> CHANGE TO UNAUTHORIZED
-                return new ModelAndView("book");
+                //result.put("succes", false);
+                //@TODO --> CHANGE TO UNAUTHORIZED
+                return new ModelAndView("user");
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
         }
         Map<String, Object> response = new HashMap<String, Object>();
 
-        response.put("book", book);
-        return new ModelAndView("book", response);
+        response.put("user", user);
+        return new ModelAndView("user", response);
 
-        // return "greeting";
+        //return "greeting";        
     }
 
-    @GetMapping("/book/update/{id}")
-    public ModelAndView showUpdateForm(@PathVariable("id") Long id, @CookieValue(value = "username") String username,
-            @CookieValue(value = "sessionID") String session, Model model) throws JSONException {
+    @GetMapping("/user/update/{id}")
+    public ModelAndView showUpdateForm(@PathVariable("id") Long id,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
-        Book book = null;
+        User user = null;
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             String role = jsonResponse.getString("role");
-            if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
+            if (jsonResponse.getBoolean("authenticated") && role.equals("admin")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
-                Optional<Book> bookDetails = bookRepository.findById(id);
-                book = bookDetails.get();
-                System.err.println("got it :" + book.getTitle());
+                Optional<User> userDetails = userRepository.findById(id);
+                user = userDetails.get();
+                System.err.println("got it :" + user.getUsername());
 
             } else {
                 return new ModelAndView("401");
@@ -223,31 +204,31 @@ public class StorageController {
         }
         Map<String, Object> response = new HashMap<String, Object>();
 
-        response.put("book", book);
-        return new ModelAndView("update-book", response);
+        response.put("user", user);
+        return new ModelAndView("update-user", response);
 
     }
 
-    @PostMapping("/update-book/{id}")
-    public String updateBook(@PathVariable("id") Long id, Book book, BindingResult result, Model model) {
-        book.setId(id);
-        book.setCreatedAt(new Date());
-        System.out.println("title" + book.getTitle());
-        System.out.println("creat at" + book.getCreatedAt());
+    @RequestMapping("/update-user/{id}")
+    public String updateUser(@PathVariable("id") Long id, User user, BindingResult result, Model model) {
+        user.setId(id);
+        System.out.println("title" + user.getUsername());
 
-        bookRepository.save(book);
+        userRepository.save(user);
 
-        return "redirect:/books";
+        return "redirect:/users";
     }
 
-    @RequestMapping("/remove-book/{id}")
-    public Object deleteBook(@PathVariable("id") Long id, @CookieValue(value = "username") String username,
-            @CookieValue(value = "sessionID") String session, Model model) throws JSONException {
+    @RequestMapping("/remove-user/{id}")
+    public Object deleteUser(@PathVariable("id") Long id,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             String role = jsonResponse.getString("role");
-            if (jsonResponse.getBoolean("authenticated") && role.equals("publisher")) {
+            if (jsonResponse.getBoolean("authenticated") && role.equals("admin")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
             } else {
                 return new ModelAndView("401");
@@ -257,8 +238,8 @@ public class StorageController {
             return new ModelAndView("401");
         }
 
-        bookRepository.deleteById(id);
-        return "redirect:/books";
+        userRepository.deleteById(id);
+        return "redirect:/users";
     }
 
     // public String greeting(@RequestParam(name = "name", required = false,
@@ -280,3 +261,4 @@ public class StorageController {
     // return "greeting";
     // }
 }
+
