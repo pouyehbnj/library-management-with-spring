@@ -137,7 +137,7 @@ public class StorageController {
                 Map<String, Object> response = new HashMap<String, Object>();
 
                 response.put("books", booksList);
-                response.put("currentPage", books.getNumber() + 1);
+                response.put("currentPage", books.getNumber());
                 System.out.println("number:" + books.getNumber());
                 response.put("noOfPages", books.getTotalPages());
                 System.out.println("noOfPages:" + books.getTotalPages());
