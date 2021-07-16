@@ -34,12 +34,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-
-
 @Controller
 
 public class UserController {
-    
+
     @Autowired
     UserRepository userRepository;
 
@@ -139,7 +137,7 @@ public class UserController {
 
         for (Map.Entry<String, Object> entry : response.entrySet()) {
             System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-       }
+        }
         return new ModelAndView("users", response);
 
         //return "greeting";        
@@ -154,29 +152,24 @@ public class UserController {
         User user = null;
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
-            if (jsonResponse.getBoolean("authenticated")) {
-                System.out.println("user role:" + jsonResponse.getString("role"));
+            String role = jsonResponse.getString("role");
+            if (jsonResponse.getBoolean("authenticated") && role.equals("admin")) {
+                System.out.println("user role:" + role);
                 Optional<User> userDetails = userRepository.findById(Long.valueOf(id));
                 user = userDetails.get();
                 System.err.println("got it :" + user.getUsername());
-                //   model.addAttribute(users);
-//                for(User user:usersList)
-//                System.out.println(user.getPublisher());
+                Map<String, Object> response = new HashMap<String, Object>();
 
+                response.put("user", user);
+                return new ModelAndView("user", response);
             } else {
-                //result.put("succes", false);
-                //@TODO --> CHANGE TO UNAUTHORIZED
-                return new ModelAndView("user");
+                return new ModelAndView("401");
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
+            return new ModelAndView("401");
         }
-        Map<String, Object> response = new HashMap<String, Object>();
 
-        response.put("user", user);
-        return new ModelAndView("user", response);
-
-        //return "greeting";        
     }
 
     @GetMapping("/user/update/{id}")
@@ -261,4 +254,3 @@ public class UserController {
     // return "greeting";
     // }
 }
-
