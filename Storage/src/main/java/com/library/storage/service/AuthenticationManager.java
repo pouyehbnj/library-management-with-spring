@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -19,29 +20,50 @@ import org.springframework.web.client.RestTemplate;
  * @author ASUS
  */
 public class AuthenticationManager {
+
     public JSONObject AuthenticationUser(String username, String session) {
         final String uri = "http://localhost:8000/checkSessions";
         Map<String, String> reqBody = new HashMap<String, String>();
         reqBody.put("username", username);
         reqBody.put("sessionID", session);
         RestTemplate restTemplate = new RestTemplate();
-
-        String result = restTemplate.postForObject(uri, reqBody, String.class);
-       // JSONObject jsonResponse;
+       // System.out.println("uri:"+session);
+        // JSONObject jsonResponse;
         try {
-              JSONObject jsonResponse = new JSONObject(result);
+            //System.out.println("uri:"+username);
             
-            if(jsonResponse.getBoolean("authenticated")){
-//                System.out.println("hellllooo!");
-//                System.out.println("role:"+jsonResponse.getString("role"));
-                
-            }else{
-                System.out.println("not found!");   
-            }
-            return jsonResponse;
+            String result = restTemplate.postForObject(uri, reqBody, String.class);
+            System.out.println("res:" + result);
+            JSONObject jsonResponse = new JSONObject(result);
+            //if (jsonResponse.has("authenticated")) {
+                System.out.println("helloooooooooo");
+                if (jsonResponse.getBoolean("authenticated")) {
+
+                } else {
+
+                    System.out.println("not found!");
+                }
+                return jsonResponse;
+//            } else {
+//                Map<String, String> res = new HashMap<String, String>();
+//                JSONObject rejected = new JSONObject(res);
+//
+//                return rejected;
+//            }
         } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
+            System.out.println("user authentication faild");
+            Map<String, Object> res = new HashMap<String, Object>();
+            res.put("authenticated", false);
+            JSONObject rejected = new JSONObject(res);
+            //e.printStackTrace();
+            return rejected;
+        }catch(HttpClientErrorException error){
+            System.out.println("user authentication faild");
+            //error.printStackTrace();
+            Map<String, Object> res = new HashMap<String, Object>();
+            res.put("authenticated", false);
+            JSONObject rejected = new JSONObject(res);
+            return rejected;
         }
     }
 }

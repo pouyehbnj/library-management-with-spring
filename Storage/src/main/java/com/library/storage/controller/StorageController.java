@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,26 +127,40 @@ public class StorageController {
         AuthenticationManager manager = new AuthenticationManager();
         System.out.println("page:" + page + " size:" + size);
         List<Book> booksList = null;
+        Map<String, Object> response = new HashMap<String, Object>();
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+          // System.out.println("authenticated:"+jsonResponse.optJSONArray);
             if (jsonResponse.getBoolean("authenticated")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
                 Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page) - 1, Integer.valueOf(size),
                         Sort.by(filter).descending());
                 Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
                 booksList = books.getContent();
-                //   model.addAttribute(books);
-//                for(Book book:booksList)
-//                System.out.println(book.getPublisher());
+                response.put("currentPage", books.getNumber()+1);
+                System.out.println("number:"+books.getNumber());
+                response.put("noOfPages", books.getTotalPages());
+                 System.out.println("noOfPages:"+books.getTotalPages());
+                response.put("totalElements", books.getTotalElements());
+                System.out.println("totalElements:"+books.getTotalElements());
+                response.put("size", books.getSize());
+                System.out.println("size:"+books.getSize());
+                response.put("books", booksList);
+                List<Integer> pageNumbers = IntStream.rangeClosed(1, books.getTotalPages())
+                .boxed()
+                .collect(Collectors.toList());
+                response.put("pageNumbers", pageNumbers);
 
+                return new ModelAndView("books", response);
+
+            } else {
+                System.out.println("helloooooooooooo?????????");
+                return new ModelAndView("401");
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
+            return new ModelAndView("401");
         }
-        Map<String, Object> response = new HashMap<String, Object>();
-
-        response.put("books", booksList);
-        return new ModelAndView("books", response);
 
         //return "greeting";        
     }
@@ -163,17 +179,14 @@ public class StorageController {
                 Optional<Book> bookDetails = bookRepository.findById(Long.valueOf(id));
                 book = bookDetails.get();
                 System.err.println("got it :" + book.getTitle());
-                //   model.addAttribute(books);
-//                for(Book book:booksList)
-//                System.out.println(book.getPublisher());
 
             } else {
-                //result.put("succes", false);
-                //@TODO --> CHANGE TO UNAUTHORIZED
-                return new ModelAndView("book");
+                return new ModelAndView("401");
+
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
+            return new ModelAndView("401");
         }
         Map<String, Object> response = new HashMap<String, Object>();
 

@@ -54,10 +54,18 @@
                                         </tr>
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div th:if="${noOfPages > 0}" class="pagination"
+             th:each="pageNumber : ${pageNumbers}">
+            <a th:href="@{/showBooks(page=${pageNumber},size=${size})}"
+               th:text=${pageNumber}
+               th:class="${pageNumber==currentPage + 1} ? active"></a>
         </div>
     </body>
