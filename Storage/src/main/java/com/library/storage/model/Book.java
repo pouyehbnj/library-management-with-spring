@@ -46,7 +46,7 @@ public class Book {
     @Column(name = "publish_year")
     private String publishYear;
 
-    @Column(name = "image")
+    @Column(name = "image",length = 1000)
     private String image;
 
     @Column(name = "created_at", nullable = false)

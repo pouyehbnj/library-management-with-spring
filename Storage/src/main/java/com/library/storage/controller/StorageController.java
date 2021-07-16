@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -112,8 +113,10 @@ public class StorageController {
 
     @GetMapping("/showBooks")
     public ModelAndView showBooks(@RequestParam(name = "page", required = true) String page,
-            @RequestParam(name = "size", required = false, defaultValue = "1") String size,
-            @CookieValue(value = "username") String username, @CookieValue(value = "sessionID") String session,
+            @RequestParam(name = "size", required = false, defaultValue = "5") String size,
+            @RequestParam(name = "filter",  required = true) String filter,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
         System.out.println("page:" + page + " size:" + size);
@@ -122,7 +125,8 @@ public class StorageController {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             if (jsonResponse.getBoolean("authenticated")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
-                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page) - 1, Integer.valueOf(size));
+                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page)-1, Integer.valueOf(size),
+                        Sort.by(filter).descending());
                 Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
                 booksList = books.getContent();
                 // model.addAttribute(books);
