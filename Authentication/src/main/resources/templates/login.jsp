@@ -3,7 +3,7 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <center>
-    <h1>Welcome to Spring Boot Security</h1>
+    <h1>Welcome to Library</h1>
 
     <h2>Login Page</h2>
 
