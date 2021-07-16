@@ -119,7 +119,7 @@ public class StorageController {
 
     @GetMapping("/showBooks")
     public ModelAndView showBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(name = "size", required = false, defaultValue = "5") String size,
+            @RequestParam(name = "size", required = false, defaultValue = "1") String size,
             @RequestParam(name = "filter", required = false, defaultValue = "createdAt") String filter,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
@@ -137,7 +137,7 @@ public class StorageController {
                         Sort.by(filter).descending());
                 Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
                 booksList = books.getContent();
-                response.put("currentPage", books.getNumber()+1);
+                response.put("currentPage", books.getNumber());
                 System.out.println("number:"+books.getNumber());
                 response.put("noOfPages", books.getTotalPages());
                  System.out.println("noOfPages:"+books.getTotalPages());
