@@ -68,4 +68,23 @@
                th:text=${pageNumber}
                th:class="${pageNumber==currentPage + 1} ? active"></a>
         </div>
+        
+<!--        
+        <nav aria-label="Pagination" th:if="${customers.totalPages gt 0}">
+    <ul class="pagination justify-content-center font-weight-bold">
+       
+        <li class="page-item" th:classappend="${i eq currentPage + 1} ? 'active'"
+            th:each="i : ${#numbers.sequence( 1, noOfPages, 1)}">
+            <a class="page-link" th:href="@{/customers?page={id}(id=${i})}" th:text="${i}"
+               th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage + 1 eq noOfPages} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/customers?page={id}(id=${currentPage + 2})}"
+               aria-label="Next" title="Next Page" data-toggle="tooltip">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>-->
     </body>
