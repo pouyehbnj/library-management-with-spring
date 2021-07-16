@@ -42,7 +42,7 @@
             <td><span th:text="${book.author}"> Author </span></td>
             <td><span th:text="${book.publisher}"> Publisher </span></td>
             <td><span th:text="${book.publishYear}"> Publish Year </span></td>
-            <td><span th:text="${book.image}"> Image </span></td>
+            <td><img th:SRC="@{${book.image}}" with="80" height="80"></img></td>
             <td><span th:text="${book.createdAt}"> Adding Date </span></td>
         </tr>
     </tbody>
