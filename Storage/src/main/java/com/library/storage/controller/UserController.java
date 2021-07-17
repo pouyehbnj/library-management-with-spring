@@ -167,7 +167,7 @@ public class UserController {
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
-            return new ModelAndView("401");
+            return new ModelAndView("500");
         }
 
     }

@@ -65,6 +65,8 @@ public class User {
     public String getPassword() {
         return password;
     }
+    
+    
 
     public User(String role, String username, String password) {
         this.role = role;
@@ -74,5 +76,7 @@ public class User {
 
     public User() {
     }
+    
+    
 
 }

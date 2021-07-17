@@ -157,7 +157,7 @@ public class StorageController {
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
-            return new ModelAndView("401");
+            return new ModelAndView("500");
         }
         return new ModelAndView("401");
 
@@ -165,7 +165,7 @@ public class StorageController {
     }
 
     @GetMapping("/book/{id}")
-    public ModelAndView bookDetails(@PathVariable String id, @CookieValue(value = "username") String username,
+    public ModelAndView bookDetails(@PathVariable Long id, @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session, Model model) throws JSONException {
         AuthenticationManager manager = new AuthenticationManager();
         Book book = null;
@@ -173,7 +173,7 @@ public class StorageController {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             if (jsonResponse.getBoolean("authenticated")) {
                 System.out.println("user role:" + jsonResponse.getString("role"));
-                Optional<Book> bookDetails = bookRepository.findById(Long.valueOf(id));
+                Optional<Book> bookDetails = bookRepository.findById(id);
                 book = bookDetails.get();
                 System.err.println("got it :" + book.getTitle());
 
@@ -212,7 +212,7 @@ public class StorageController {
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
-            return new ModelAndView("401");
+            return new ModelAndView("500");
         }
         Map<String, Object> response = new HashMap<String, Object>();
 
@@ -247,7 +247,7 @@ public class StorageController {
             }
         } catch (NullPointerException e) {
             System.err.println("error with authentication module!");
-            return new ModelAndView("401");
+            return new ModelAndView("500");
         }
 
         bookRepository.deleteById(id);

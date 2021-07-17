@@ -38,12 +38,17 @@ public class Comment {
     @Column(name = "content", nullable = false)
     private String content;
 
-    public Comment(int id, User user, Book book, String content) {
-        this.id = id;
+    public Comment(User user, Book book, String content) {
+        //this.id = id;
         this.user = user;
         this.book = book;
         this.content = content;
     }
+
+    public Comment() {
+    }
+    
+    
 
     public int getId() {
         return id;

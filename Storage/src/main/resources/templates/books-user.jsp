@@ -16,8 +16,8 @@
                 <div class="card-body">
                     <div th:switch="${books}" class="container my-5">
                         <p class="my-5">
-                            <a href="/book/add" class="btn btn-primary"> 
-                                <i class="fas fa-user-plus ml-2">  Add Book </i></a>
+                            <!--                            <a href="/book/add" class="btn btn-primary"> 
+                                                            <i class="fas fa-user-plus ml-2">  Add Book </i></a>-->
                         </p>
                         <div class="col-md-12">
                             <h2 th:case="null">No record found !!</h2>
@@ -46,7 +46,7 @@
                                             <td><img th:SRC="@{${book.image}}" with="80" height="80"></img></td>
                                             <td><span th:text="${book.createdAt}"> Adding Date </span></td>
                                             <td><a th:href="@{/book/{id}(id=${book.id})}" class="btn btn-primary"><i class="fas fa-marker ml-2"></i></a></td>
-                                          
+
                                         </tr>
                                     </tbody>
                                 </table>
@@ -56,4 +56,28 @@
                 </div>
             </div>
         </div>
+        <nav aria-label="Pagination" th:if="${noOfPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-bold">
+                <li class="page-item" th:classappend="${currentPage eq 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/books?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
+                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${i eq currentPage + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, noOfPages, 1)}">
+                    <a class="page-link" th:href="@{/books?page={id}(id=${i})}" th:text="${i}"
+                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage + 1 eq noOfPages} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/books?page={id}(id=${currentPage + 2})}"
+                       aria-label="Next" title="Next Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </body>

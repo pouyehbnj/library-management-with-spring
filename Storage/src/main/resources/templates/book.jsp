@@ -31,20 +31,38 @@
                             <th> Publish Year </th>
                             <th> image </th> 
                             <th> Adding Date </th>
-                         
+
 
                         </tr>
                     </thead>
                     <tbody>
 
-                            <td><span th:text="${book.ISSN}"> ISSN </span></td>
-                            <td><span th:text="${book.title}"> Title </span></td>
-                            <td><span th:text="${book.author}"> Author </span></td>
-                            <td><span th:text="${book.publisher}"> Publisher </span></td>
-                            <td><span th:text="${book.publishYear}"> Publish Year </span></td>
-                            <td><img th:SRC="@{${book.image}}" with="200" height="200"></img></td>
-                            <td><span th:text="${book.createdAt}"> Adding Date </span></td>
+                        <td><span th:text="${book.ISSN}"> ISSN </span></td>
+                        <td><span th:text="${book.title}"> Title </span></td>
+                        <td><span th:text="${book.author}"> Author </span></td>
+                        <td><span th:text="${book.publisher}"> Publisher </span></td>
+                        <td><span th:text="${book.publishYear}"> Publish Year </span></td>
+                        <td><img th:SRC="@{${book.image}}" with="200" height="200"></img></td>
+                        <td><span th:text="${book.createdAt}"> Adding Date </span></td>
                         </tr>
                     </tbody>
-                </table>     
+                </table>  
+
+                <!--                <div class="container my-2">
+                                    <div class="card">
+                                        <div class="card-body">-->
+                <!--                            <div th:switch="${book}" class="container my-5">-->
+                <p class="my-5">
+                    <form action="#" th:action="@{/comment/add/{id}(id=${book.id})}" th:object="${book}"> 
+<!--                        <i class="fas fa-user-plus ml-2">  Add Comment </i>-->
+                        <div class="col-md-6">
+                            <input type="submit" class="btn btn-primary" value=" Add Comment ">
+                        </div>
+                    </form>
+                </p>
+
+                <!--                            </div>-->
+                <!--                        </div>
+                                    </div>
+                                </div>-->
                 </html>
