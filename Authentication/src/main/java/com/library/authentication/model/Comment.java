@@ -25,7 +25,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private int id;
+    private Long id;
     
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -38,14 +38,14 @@ public class Comment {
     @Column(name = "content", nullable = false)
     private String content;
 
-    public Comment(int id, User user, Book book, String content) {
+    public Comment(Long id, User user, Book book, String content) {
         this.id = id;
         this.user = user;
         this.book = book;
         this.content = content;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
