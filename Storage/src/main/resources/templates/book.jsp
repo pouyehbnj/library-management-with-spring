@@ -5,74 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet"href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
             <link rel="stylesheet"href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-                <title>Book Details</title>
-                <h1 style="text-align:center; color:  rgb(6, 126, 134)">Books Details</h1>
-                <style>
-                    table,
-                    td {
-                        border: 1px solid rgb(8, 6, 150);
-                        background-color: #bafaf5;
-                        text-align: center;
+             
+                <div class="container my-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="container my-5">
+                                <div class="col-md-12">
+                                    <div >
+                                        <table class="table table-striped table-responsive-md">
+                                            <thead>
+                                                <tr>
+                                                    <th> ISSN </th>
+                                                    <th> Title </th>
+                                                    <th> Author </th>
+                                                    <th> Publisher </th>
+                                                    <th> Publish Year </th>
+                                                    <th> image </th> 
+                                                    <th> Adding Date </th>
 
-                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr >
+                                                    <td><span th:text="${book.ISSN}"> ISSN </span></td>
+                                                    <td><span th:text="${book.title}"> Title </span></td>
+                                                    <td><span th:text="${book.author}"> Author </span></td>
+                                                    <td><span th:text="${book.publisher}"> Publisher </span></td>
+                                                    <td><span th:text="${book.publishYear}"> Publish Year </span></td>
+                                                    <td><img th:SRC="@{${book.image}}" with="200" height="200"></img></td>
+                                                    <td><span th:text="${book.createdAt}"> Adding Date </span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p class="my-5">
+                                            <form action="#" th:action="@{/comment/add/{id}(id=${book.id})}" th:object="${book}"> 
 
-                    th {
-                        color: white;
-                        background: rgb(7, 155, 241);
-                    }
+                                                <div class="col-md-6">
 
-                </style>
-                <table align="center">
-                    <thead>
-                        <tr>
-                            <th> ISSN </th>
-                            <th> Title </th>
-                            <th> Author </th>
-                            <th> Publisher </th>
-                            <th> Publish Year </th>
-                            <th> image </th> 
-                            <th> Adding Date </th>
+                                                    <input type="submit" class="btn btn-primary" value=" Add Comment ">
+                                                </div>
+                                            </form>
 
+                                            <form action="#" th:action="@{/comments/{id}(id=${book.id})}" th:object="${book}"> 
 
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        <td><span th:text="${book.ISSN}"> ISSN </span></td>
-                        <td><span th:text="${book.title}"> Title </span></td>
-                        <td><span th:text="${book.author}"> Author </span></td>
-                        <td><span th:text="${book.publisher}"> Publisher </span></td>
-                        <td><span th:text="${book.publishYear}"> Publish Year </span></td>
-                        <td><img th:SRC="@{${book.image}}" with="200" height="200"></img></td>
-                        <td><span th:text="${book.createdAt}"> Adding Date </span></td>
-                        </tr>
-                    </tbody>
-                </table>  
-
-
-                <p class="my-5">
-                    <form action="#" th:action="@{/comment/add/{id}(id=${book.id})}" th:object="${book}"> 
-
-                        <div class="col-md-6">
-                      
-                            <input type="submit" class="btn btn-primary" value=" Add Comment ">
+                                                <div class="col-md-6">
+                                                    <input type="submit" class="btn btn-primary" value=" View Comments ">
+                                                </div>
+                                            </form>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                </div>
 
-                    <form action="#" th:action="@{/comments/{id}(id=${book.id})}" th:object="${book}"> 
-
-                        <div class="col-md-6">
-                            <input type="submit" class="btn btn-primary" value=" View Comments ">
-                        </div>
-                    </form>
-                </p>
-                <!--
-                                <p class="my-5">
-                                    <form action="#" th:action="@{/comments/{id}(id=${book.id})}" th:object="${book}"> 
-                                                                <i class="fas fa-user-plus ml-2">  Add Comment </i>
-                                        <div class="col-md-6">
-                                            <input type="submit" class="btn btn-primary" value=" View Comments ">
-                                        </div>
-                                    </form>
-                                </p>-->
+              
                 </html>
