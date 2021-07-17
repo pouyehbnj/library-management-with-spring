@@ -115,7 +115,7 @@ public class StorageController {
 
     @GetMapping("/books")
     public ModelAndView showBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(name = "size", required = false, defaultValue = "1") String size,
+            @RequestParam(name = "size", required = false, defaultValue = "3") String size,
             @RequestParam(name = "filter", required = false, defaultValue = "createdAt") String filter,
             @CookieValue(value = "username") String username, @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
