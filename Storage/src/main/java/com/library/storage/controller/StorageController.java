@@ -2,7 +2,7 @@ package com.library.storage.controller;/*
                                        * To change this license header, choose License Headers in Project Properties.
                                        * To change this template file, choose Tools | Templates
                                        * and open the template in the editor.
-                                       */
+ */
 
 import com.library.storage.model.Book;
 import com.library.storage.repository.BookManager;
@@ -75,7 +75,7 @@ public class StorageController {
     }
 
     @RequestMapping(value = "/book/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
-            MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ModelAndView addBooks(@RequestParam Map<String, String> req,
             @CookieValue(value = "username") String username, @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
@@ -149,7 +149,7 @@ public class StorageController {
                 List<Integer> pageNumbers = IntStream.rangeClosed(1, books.getTotalPages()).boxed()
                         .collect(Collectors.toList());
                 response.put("pageNumbers", pageNumbers);
-                response.put("filterValue","createdAt");
+                response.put("filterValue", "createdAt");
 
                 if (jsonResponse.getString("role").equals("user")) {
                     return new ModelAndView("books-user", response);
@@ -172,11 +172,19 @@ public class StorageController {
         Book book = null;
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
             if (jsonResponse.getBoolean("authenticated")) {
-                System.out.println("user role:" + jsonResponse.getString("role"));
+                System.out.println("user role:" + role);
                 Optional<Book> bookDetails = bookRepository.findById(id);
                 book = bookDetails.get();
-                System.err.println("got it :" + book.getTitle());
+                System.out.println("got it :" + book.getTitle());
+                Map<String, Object> response = new HashMap<String, Object>();
+                response.put("book", book);
+                if (role.equals("user")) 
+                    return new ModelAndView("book", response);
+                else
+                    return new ModelAndView("book-publisher", response);
+                
 
             } else {
                 return new ModelAndView("401");
@@ -186,10 +194,6 @@ public class StorageController {
             System.err.println("error with authentication module!");
             return new ModelAndView("401");
         }
-        Map<String, Object> response = new HashMap<String, Object>();
-
-        response.put("book", book);
-        return new ModelAndView("book", response);
 
         // return "greeting";
     }

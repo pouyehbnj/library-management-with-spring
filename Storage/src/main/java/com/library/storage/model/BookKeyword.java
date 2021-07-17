@@ -34,6 +34,41 @@ public class BookKeyword {
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
+
+    public BookKeyword(Keyword keyword, Book book) {
+        this.keyword = keyword;
+        this.book = book;
+    }
+
+    public BookKeyword() {
+    }
+    
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setKeyword(Keyword keyword) {
+        this.keyword = keyword;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Keyword getKeyword() {
+        return keyword;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+    
+    
     
     
     
