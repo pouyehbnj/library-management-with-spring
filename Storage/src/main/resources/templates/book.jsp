@@ -54,15 +54,19 @@
                 <!--                            <div th:switch="${book}" class="container my-5">-->
                 <p class="my-5">
                     <form action="#" th:action="@{/comment/add/{id}(id=${book.id})}" th:object="${book}"> 
-<!--                        <i class="fas fa-user-plus ml-2">  Add Comment </i>-->
+                        <!--                        <i class="fas fa-user-plus ml-2">  Add Comment </i>-->
                         <div class="col-md-6">
                             <input type="submit" class="btn btn-primary" value=" Add Comment ">
                         </div>
                     </form>
                 </p>
 
-                <!--                            </div>-->
-                <!--                        </div>
-                                    </div>
-                                </div>-->
+                <p class="my-5">
+                    <form action="#" th:action="@{/comments/{id}(id=${book.id})}" th:object="${book}"> 
+                        <!--                        <i class="fas fa-user-plus ml-2">  Add Comment </i>-->
+                        <div class="col-md-6">
+                            <input type="submit" class="btn btn-primary" value=" View Comments ">
+                        </div>
+                    </form>
+                </p>
                 </html>

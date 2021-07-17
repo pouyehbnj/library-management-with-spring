@@ -46,67 +46,73 @@ public class CommentController {
 
     @Autowired
     BookRepository bookRepository;
-    
+
     @Autowired
     CommentRepository commentRepository;
 
-    
-    
-//    @GetMapping("/comments/{book_id}")
-//    public ModelAndView users(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
-//            @RequestParam(name = "size", required = false, defaultValue = "5") String size,
-//            @RequestParam(name = "filter", required = false, defaultValue = "role") String filter,
-//            @CookieValue(value = "username") String username,
-//            @CookieValue(value = "sessionID") String session,
-//            Model model) throws JSONException {
-//        AuthenticationManager manager = new AuthenticationManager();
-//        System.out.println("page:" + page + " size:" + size);
-//        List<User> usersList = null;
-//        try {
-//            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
-//            if (jsonResponse.getBoolean("authenticated")) {
-//                System.out.println("user role:" + jsonResponse.getString("role"));
-//                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page) - 1, Integer.valueOf(size),
-//                        Sort.by(filter).descending());
-//                Page<User> users = (Page<User>) userRepository.findAll(pages);
-//                usersList = users.getContent();
-//                //   model.addAttribute(users);
-////                for(User user:usersList)
-////                System.out.println(user.getPublisher());
-//
-//            }
-//        } catch (NullPointerException e) {
-//            System.err.println("error with authentication module!");
-//        }
-//        Map<String, Object> response = new HashMap<String, Object>();
-//        response.put("users", usersList);
-//
-//        for (Map.Entry<String, Object> entry : response.entrySet()) {
-//            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-//        }
-//        return new ModelAndView("users", response);
-//
-//        //return "greeting";        
-//    }
-    
-    
-    
+    @GetMapping("/comments/{book_id}")
+    public ModelAndView comments(@PathVariable("book_id") String bookId,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(name = "size", required = false, defaultValue = "1") String size,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
+        AuthenticationManager manager = new AuthenticationManager();
+        System.out.println("page:" + page + " size:" + size);
+        Long id = Long.valueOf(bookId);
+        List<Comment> commentsList = null;
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
+            System.out.println("user role:" + role);
+            if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
+                Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page) - 1,
+                        Integer.valueOf(size));
+                User user = userRepository.findByusername(username);
+                Optional<Book> bookInfo = bookRepository.findById(id);
+                Book book = bookInfo.get();
+                Page<Comment> comments = commentRepository.findByBook(book, pages);
+                commentsList = comments.getContent();
+                Map<String, Object> response = new HashMap<String, Object>();
+                response.put("comments", commentsList);
+                response.put("user",user);
+                response.put("book",book);
+                response.put("currentPage", comments.getNumber());
+                System.out.println("currentPage:" + comments.getNumber());
+                response.put("noOfPages", comments.getTotalPages());
+                System.out.println("noOfPages:" + comments.getTotalPages());
+                for (Map.Entry<String, Object> entry : response.entrySet()) {
+                    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                }
+                return new ModelAndView("comments", response);
+            } else {
+
+                return new ModelAndView("401");
+            }
+        } catch (NullPointerException e) {
+            System.err.println("error with authentication module!");
+            return new ModelAndView("500");
+        }
+
+        //return "greeting";        
+    }
+
     @GetMapping("/comment/add/{book_id}")
     public ModelAndView addComments(@PathVariable("book_id") String bookId,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session) {
-        System.out.println("HERE:"+bookId);
+        System.out.println("HERE:" + bookId);
         AuthenticationManager manager = new AuthenticationManager();
         Map<String, Object> result = new HashMap<String, Object>();
         Long id = Long.valueOf(bookId);
-        System.out.println("got id:"+id);
+        System.out.println("got id:" + id);
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             String role = jsonResponse.getString("role");
             System.out.println("user role:" + role);
 
             if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
-                
+
                 return new ModelAndView("addComment");
             } else {
                 result.put("succes", false);
@@ -122,7 +128,7 @@ public class CommentController {
 
     @RequestMapping(value = "/comment/add/{book_id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
         MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Object addUsers(@RequestParam Map<String, String> req,
+    public Object addComments(@RequestParam Map<String, String> req,
             @PathVariable("book_id") String bookId,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
@@ -133,7 +139,7 @@ public class CommentController {
         AuthenticationManager manager = new AuthenticationManager();
         Map<String, Object> result = new HashMap<String, Object>();
         Long id = Long.valueOf(bookId);
-        System.out.println("got id:"+id);
+        System.out.println("got id:" + id);
         try {
             JSONObject jsonResponse = manager.AuthenticationUser(username, session);
             String role = jsonResponse.getString("role");
@@ -146,7 +152,7 @@ public class CommentController {
                 Comment comment = new Comment(user, book, req.get("content"));
                 System.out.println(req);
                 commentRepository.save(comment);
-                return "redirect:/book/"+id;
+                return "redirect:/book/" + id;
                 //return new ModelAndView("redirect:/users");
 
             } else {
@@ -160,7 +166,6 @@ public class CommentController {
 
         }
 
-        // return "greeting";
     }
 
 }
