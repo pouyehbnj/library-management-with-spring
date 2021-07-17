@@ -12,6 +12,7 @@ import com.library.storage.repository.BookRepository;
 import com.library.storage.repository.CommentRepository;
 import com.library.storage.repository.UserRepository;
 import com.library.storage.service.AuthenticationManager;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +27,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,8 +78,8 @@ public class CommentController {
                 commentsList = comments.getContent();
                 Map<String, Object> response = new HashMap<String, Object>();
                 response.put("comments", commentsList);
-                response.put("user",user);
-                response.put("book",book);
+                response.put("user", user);
+                response.put("book", book);
                 response.put("currentPage", comments.getNumber());
                 System.out.println("currentPage:" + comments.getNumber());
                 response.put("noOfPages", comments.getTotalPages());
@@ -164,6 +167,87 @@ public class CommentController {
             result.put("succes", false);
             return new ModelAndView("500");
 
+        }
+
+    }
+
+    @GetMapping("/comment/update/{id}")
+    public ModelAndView showUpdateForm(
+            @PathVariable("id") Long id,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
+        AuthenticationManager manager = new AuthenticationManager();
+        Comment comment = null;
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
+            if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
+
+                Optional<Comment> commentDetails = commentRepository.findById(id);
+                comment = commentDetails.get();
+                System.out.println("got it :" + comment.getContent());
+                Map<String, Object> response = new HashMap<String, Object>();
+
+                response.put("comment", comment);
+                return new ModelAndView("update-comment", response);
+
+            } else {
+                return new ModelAndView("401");
+            }
+        } catch (NullPointerException e) {
+            System.err.println("error with authentication module!");
+            return new ModelAndView("500");
+        }
+
+    }
+
+    @PostMapping("/update-comment/{id}")
+    public String updateBook(@PathVariable("id") Long id,
+            Comment comment,
+            BindingResult result,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) {
+        comment.setId(id);
+
+        Optional<Comment> bookCommentInfo = commentRepository.findById(id);
+        Comment bookComment = bookCommentInfo.get();
+        User user = userRepository.findByusername(username);
+        Book book = bookComment.getBook();
+        Long bookId = book.getId();
+        System.out.println("book:" + bookId);
+        System.out.println("title" + comment.getContent());
+        comment.setBook(book);
+        comment.setUser(user);
+        commentRepository.save(comment);
+
+        return "redirect:/comments/" + bookId;
+    }
+
+    @RequestMapping("/comment/remove/{id}")
+    public Object deleteUser(@PathVariable("id") Long id,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
+        AuthenticationManager manager = new AuthenticationManager();
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
+            if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
+
+                Optional<Comment> bookCommentInfo = commentRepository.findById(id);
+                Comment bookComment = bookCommentInfo.get();
+                Long bookId = bookComment.getBook().getId();
+                commentRepository.deleteById(id);
+                return "redirect:/comments/" + bookId;
+                
+            } else {
+                return new ModelAndView("401");
+            }
+        } catch (NullPointerException e) {
+            System.err.println("error with authentication module!");
+            return new ModelAndView("401");
         }
 
     }

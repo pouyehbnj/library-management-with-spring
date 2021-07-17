@@ -5,17 +5,14 @@
  */
 package com.library.storage.repository;
 
-import com.library.storage.model.Keyword;
-import org.jboss.logging.annotations.Param;
+
+import com.library.storage.model.BookKeyword;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Pouyeh
  */
-@Repository
-public interface KeywordRepository  extends JpaRepository<Keyword, Long> {
-    Keyword findByWord(String word);
+public interface BookKeywordRepository extends JpaRepository<BookKeyword, Long>{
     
 }

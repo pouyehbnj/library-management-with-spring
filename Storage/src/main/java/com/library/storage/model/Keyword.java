@@ -26,4 +26,29 @@ public class Keyword {
     
     @Column(name = "word", nullable = false)
     private String word;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public Keyword(String word) {
+        this.word = word;
+    }
+
+    public Keyword() {
+    }
+    
+    
 }
