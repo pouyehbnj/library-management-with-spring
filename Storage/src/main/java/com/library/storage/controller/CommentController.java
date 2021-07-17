@@ -53,7 +53,7 @@ public class CommentController {
     @GetMapping("/comments/{book_id}")
     public ModelAndView comments(@PathVariable("book_id") String bookId,
             @RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(name = "size", required = false, defaultValue = "1") String size,
+            @RequestParam(name = "size", required = false, defaultValue = "3") String size,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {

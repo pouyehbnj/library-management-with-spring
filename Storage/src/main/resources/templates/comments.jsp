@@ -23,7 +23,6 @@
                                     <thead>
                                         <tr>
                                             <th> User Name </th>
-                                            <th> Book Title </th>
                                             <th> Comment </th>
                                             <th>Edit</th>
                                             <th>Delete</th>
@@ -32,11 +31,19 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="comment : ${comments}">
-                                            <td><span th:text="${user.username}"> User Name </span></td>
-                                             <td><span th:text="${book.title}"> Book Title </span></td>
+                                            <td><span th:text="${comment.user.username}"> User Name </span></td>
                                             <td><span th:text="${comment.content}"> Content </span></td>
-                                            <td><a th:href="@{/comments/update/{id}(id=${comment.id})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a></td>
-                                            <td><a th:href="@{/comments/remove/{id}(id=${comment.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
+                                            <td>
+                                                <span th:if="${comment.user.id eq user.id}">
+                                                    <a th:href="@{/comments/update/{id}(id=${comment.id})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a>
+                                                </span>
+                                                    
+
+                                            </td> 
+                                            <td><span th:if="${comment.user.id eq user.id}">
+                                                    <a th:href="@{/comments/remove/{id}(id=${comment.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a>
+                                                </span>
+                                            </td>
 
                                         </tr>
                                     </tbody>
