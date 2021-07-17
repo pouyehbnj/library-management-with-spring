@@ -63,7 +63,6 @@
 
                 <div class="col-md-6">
                     <input type="submit" class="btn btn-primary" name="Login" />
-                    <button type="button" class="btn btn-light">Light</button>
                 </div>
             </form>
         </div>

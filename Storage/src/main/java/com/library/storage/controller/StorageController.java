@@ -149,6 +149,7 @@ public class StorageController {
                 List<Integer> pageNumbers = IntStream.rangeClosed(1, books.getTotalPages()).boxed()
                         .collect(Collectors.toList());
                 response.put("pageNumbers", pageNumbers);
+                response.put("filterValue","createdAt");
 
                 if (jsonResponse.getString("role").equals("user")) {
                     return new ModelAndView("books-user", response);

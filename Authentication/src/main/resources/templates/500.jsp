@@ -58,6 +58,15 @@
         <div class="message">
             Internal Server Error
         </div>
+
+        <div class="row">
+            <form method="GET" action="http://localhost:8000/login">
+
+                <div class="col-md-6">
+                    <input type="submit" class="btn btn-primary" name="Login" />
+                </div>
+            </form>
+        </div>
     </div>
 
     <!--
