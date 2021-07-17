@@ -37,6 +37,19 @@
                                         </tr>
                                     </tbody>
                                 </table>
+
+                                <div class="row btn-toolbar">
+
+                                    <form action="#" th:action="@{/users}" th:object="${book}">
+                                        <div class="col-sm-4 col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                            <input type="submit" class="btn btn-primary" value=" Back ">
+                                        </div>
+                                    </form>
+    
+                                </div>
+                            
+    
+
                             </div>
                         </div>
                     </div>
