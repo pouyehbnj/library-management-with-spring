@@ -7,7 +7,7 @@ package com.library.search.service;
 
 import com.library.search.model.Book;
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,7 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
-import static org.springframework.jdbc.core.JdbcOperationsExtensionsKt.query;
+//import static org.springframework.jdbc.core.JdbcOperationsExtensionsKt.query;
 
 /**
  *

@@ -5,10 +5,17 @@ package com.library.search.controller;/*
  */
 
 import com.library.search.model.Book;
+import com.library.search.model.BookKeyword;
+import com.library.search.model.Keyword;
+import com.library.search.repository.BookKeywordRepository;
 import com.library.search.repository.BookRepository;
+import com.library.search.repository.KeywordRepository;
 import com.library.search.service.BookSpecification;
-import com.library.storage.service.AuthenticationManager;
+import com.library.search.service.AuthenticationManager;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,8 +53,14 @@ public class SearchController {
     @Autowired
     BookRepository bookRepository;
 
+    @Autowired
+    KeywordRepository keywordRepository;
+
+    @Autowired
+    BookKeywordRepository bookKeywordRepository;
+
     @GetMapping("/book/search/form")
-    public ModelAndView ssearchBooksForm(@CookieValue(value = "username") String username,
+    public ModelAndView searchBooksForm(@CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session) {
 
         AuthenticationManager manager = new AuthenticationManager();
@@ -78,16 +91,15 @@ public class SearchController {
     public ModelAndView searchBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
             @RequestParam(name = "size", required = false, defaultValue = "3") String size,
             @RequestParam Map<String, String> req,
-            @ModelAttribute Book search,  
-            
+            @ModelAttribute Book search,
             @CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session,
             Model model) throws JSONException {
         String from = req.get("from");
         String to = req.get("to");
-        System.out.println("from --------------------- " +from );
-        System.out.println("to --------------------- " +to );
-        
+        System.out.println("from --------------------- " + from);
+        System.out.println("to --------------------- " + to);
+
         AuthenticationManager manager = new AuthenticationManager();
         System.out.println("page:" + page + " size:" + size);
 
@@ -99,24 +111,116 @@ public class SearchController {
             if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
                 Pageable pages = (Pageable) PageRequest.of(Integer.valueOf(page) - 1, Integer.valueOf(size));
                 //Page<Book> books;
-               
+
                 Specification<Book> spec;
-              //  if ((search.getTitle() != null) ||(search.getAuthor()!=null)||(search.getPublisher()!=null)){
-                    if(from != null && to != null){
-                         spec = new BookSpecification(search,from,to);
+                //  if ((search.getTitle() != null) ||(search.getAuthor()!=null)||(search.getPublisher()!=null)){
+                if (from != null && to != null) {
+                    spec = new BookSpecification(search, from, to);
 
-                    }else{
-                         spec = new BookSpecification(search,null,null);
+                } else {
+                    spec = new BookSpecification(search, null, null);
 
-                    }
-                    
-                    books = bookRepository.findAll(spec);//, pages);
-            //    } 
+                }
+
+                books = bookRepository.findAll(spec);//, pages);
+                //    } 
 //                else {
 //                    books = (Page<Book>) bookRepository.findAll(pages);
 //                }
 
                 //booksList = books.getContent();
+                Map<String, Object> response = new HashMap<String, Object>();
+
+                response.put("books", books);
+//                response.put("currentPage", books.getNumber());
+//                System.out.println("currentPage:" + books.getNumber());
+//                response.put("noOfPages", books.getTotalPages());
+//                System.out.println("noOfPages:" + books.getTotalPages());
+//                response.put("filterValue", "createdAt");
+
+                if (jsonResponse.getString("role").equals("user")) {
+                    return new ModelAndView("books-user", response);
+                }
+                return new ModelAndView("books", response);
+            } else {
+                return new ModelAndView("401");
+            }
+        } catch (NullPointerException e) {
+            System.err.println("error with authentication module!");
+            return new ModelAndView("500");
+        }
+
+    }
+
+    @GetMapping("/book/search/keyword/form")
+    public ModelAndView searchKeywordsForm(@CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session) {
+
+        AuthenticationManager manager = new AuthenticationManager();
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try {
+            JSONObject jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
+            System.out.println("user role:" + role);
+
+            if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
+                //System.out.println("here?");
+                return new ModelAndView("search-keyword");
+            } else {
+                result.put("succes", false);
+                return new ModelAndView("401");
+            }
+        } catch (Exception e) {
+            System.err.println("error with authentication module!" + e.getMessage());
+            result.put("succes", false);
+            return new ModelAndView("500");
+
+        }
+    }
+
+    @RequestMapping(value = "/book/search/keyword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+        MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView searchKeywords(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(name = "size", required = false, defaultValue = "3") String size,
+            @RequestParam Map<String, String> req,
+            @CookieValue(value = "username") String username,
+            @CookieValue(value = "sessionID") String session,
+            Model model) throws JSONException {
+
+        AuthenticationManager manager = new AuthenticationManager();
+        System.out.println("page:" + page + " size:" + size);
+
+        List<Book> books = null;
+        JSONObject jsonResponse = null;
+        try {
+            jsonResponse = manager.AuthenticationUser(username, session);
+            String role = jsonResponse.getString("role");
+            if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
+                String request = req.get("keywords");
+                String[] words = request.split(",");
+                List<Keyword> keywords = keywordRepository.findAllByWordIn(Arrays.asList(words));
+                List<List<BookKeyword>> bookKeywords = null;
+                List<List<Long>> ids;
+                HashSet<Long> intersectionSet = new HashSet<>();
+                for (Keyword keyword : keywords) {
+                    bookKeywords.add(bookKeywordRepository.findAllByKeyword(keyword));
+                }
+                for (List<BookKeyword> bookKeyword : bookKeywords) {
+                    for (BookKeyword word : bookKeyword) {
+//                        ids.add(word.getBook().getId());
+//                        ids.add((word.getBook().getId()));
+                    }
+                }
+                intersectionSet.add(bookKeywords.get(0).get(0).getBook().getId());
+                for (List<BookKeyword> bookKeyword : bookKeywords) {
+                    for (BookKeyword word : bookKeyword) {
+                     //   HashSet<Integer> set = new HashSet<>(Arrays.asList(bookKeyword));
+                      //  intersectionSet.retainAll(set);
+                    }
+
+                }
+
                 Map<String, Object> response = new HashMap<String, Object>();
 
                 response.put("books", books);

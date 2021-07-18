@@ -5,6 +5,8 @@
  */
 package com.library.search.repository;
 
+
+import com.library.search.model.BookKeyword;
 import com.library.search.model.Keyword;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Repository;
  * @author Pouyeh
  */
 @Repository
-public interface KeywordRepository  extends JpaRepository<Keyword, Long> {
-    List<Keyword> findAllByWordIn(List<String> words);
+public interface BookKeywordRepository extends JpaRepository<BookKeyword, Long>{
+    List<BookKeyword> findAllByKeyword(Keyword keyword);
     
 }
