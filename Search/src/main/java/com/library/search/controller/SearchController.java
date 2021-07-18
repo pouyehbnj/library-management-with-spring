@@ -114,7 +114,7 @@ public class SearchController {
 
                 Specification<Book> spec;
                 //  if ((search.getTitle() != null) ||(search.getAuthor()!=null)||(search.getPublisher()!=null)){
-                if (from != null && to != null) {
+                if (from != "" && to != "") {
                     spec = new BookSpecification(search, from, to);
 
                 } else {
