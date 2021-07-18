@@ -20,13 +20,10 @@
                     <div class="row btn-toolbar">
 
                         <p  class="col-sm-2">
-                            <a href="http://localhost:8001/book/search/form" class="btn btn-primary">
-                                <i class="fas fa-search ml-2"> Search Book </i></a>
+                            <a href="http://localhost:8002/books" class="btn btn-primary">
+                                <i class="fas fa-search ml-2"> Back </i></a>
                         </p>
-                        <p  class="col-sm-3">
-                            <a href="http://localhost:8001/book/search/keyword" class="btn btn-primary">
-                                <i class="fas fa-search ml-2"> Search Keyword </i></a>
-                        </p>
+
                     </div>
                     <div class="col-md-12">
                         <h2 th:case="null">No record found !!</h2>
@@ -34,37 +31,37 @@
                             <table class="table table-striped table-responsive-md">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <a
-                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=ISSN)}">ISBN</a>
+                                        <th>ISBN
+<!--                                            <a
+                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=ISSN)}">ISBN</a>-->
 
                                         </th>
 
-                                        <th>
-                                            <a
-                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=title)}">Title</a>
+                                        <th>Title
+<!--                                            <a
+                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=title)}">Title</a>-->
 
                                         </th>
 
-                                        <th>
-                                            <a
-                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=author)}">Author</a>
+                                        <th>Author
+<!--                                            <a
+                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=author)}">Author</a>-->
                                         </th>
-                                        <th>
+                                        <th>Publisher
 
-                                            <a
-                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=publisher)}">Publisher</a>
-                                        </th>
-
-                                        <th>
-                                            <a
-                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=publishYear)}">Year</a>
-
+<!--                                            <a
+                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=publisher)}">Publisher</a>-->
                                         </th>
 
-                                        <th>
-                                            <a
-                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=createdAt)}">Date</a>
+                                        <th>Year
+<!--                                            <a
+                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=publishYear)}">Year</a>-->
+
+                                        </th>
+
+                                        <th>Date
+<!--                                            <a
+                                                th:href="@{/books?page={id}&filter={filter}(id=${currentPage + 1},filter=createdAt)}">Date</a>-->
 
                                         </th>
 
@@ -98,10 +95,10 @@
         </div>
     </div>
 
-    <nav aria-label="Pagination" th:if="${noOfPages gt 0}" onmouseover="run();">
+<!--    <nav aria-label="Pagination" th:if="${noOfPages gt 0}" onmouseover="run();">
         <ul class="pagination justify-content-center font-weight-bold" onmouseover="run();">
             <li class="page-item" th:classappend="${currentPage eq 0} ? 'disabled'" onmouseover="run();">
-                <a class="page-link" th:href="@{/books?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
+                <a class="page-link" th:href="@{/book/search?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
                     aria-label="Previous" title="Previous Page" data-toggle="tooltip" onmouseover="run();" id="link-1">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
@@ -109,17 +106,17 @@
 
             <li class="page-item" th:classappend="${i eq currentPage + 1} ? 'active'"
                 th:each="i : ${#numbers.sequence( 1, noOfPages, 1)}" onmouseover="run();">
-                <a class="page-link" th:href="@{/books?page={id}(id=${i})}" th:text="${i}" th:title="${'Page '+ i}"
+                <a class="page-link" th:href="@{/book/search?page={id}(id=${i})}" th:text="${i}" th:title="${'Page '+ i}"
                     data-toggle="tooltip" id="link-2" value="i"></a>
             </li>
             <li class="page-item" th:classappend="${currentPage + 1 eq noOfPages} ? 'disabled'" onmouseover="run()">
-                <a class="page-link" th:href="@{/books?page={id}(id=${currentPage + 2})}" aria-label="Next"
+                <a class="page-link" th:href="@{/book/search?page={id}(id=${currentPage + 2})}" aria-label="Next"
                     title="Next Page" data-toggle="tooltip" id="link-3">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
-    </nav>
+    </nav>-->
 </body>
 
 </html>

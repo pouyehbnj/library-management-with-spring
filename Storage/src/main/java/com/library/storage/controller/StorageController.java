@@ -131,9 +131,6 @@ public class StorageController {
                         Sort.by(filter).descending());
                 Page<Book> books = (Page<Book>) bookRepository.findAll(pages);
                 booksList = books.getContent();
-                // model.addAttribute(books);
-                // for(Book book:booksList)
-                // System.out.println(book.getPublisher());
                 Map<String, Object> response = new HashMap<String, Object>();
 
                 response.put("books", booksList);
@@ -259,22 +256,4 @@ public class StorageController {
         return "redirect:/books";
     }
 
-    // public String greeting(@RequestParam(name = "name", required = false,
-    // defaultValue = "World") String name,
-    // @CookieValue(value = "username") String username,
-    // @CookieValue(value = "sessionID") String session,
-    // Model model) throws JSONException {
-    // AuthenticationManager manager = new AuthenticationManager();
-    // try{
-    // JSONObject jsonResponse = manager.AuthenticationUser(username, session);
-    // if(jsonResponse.getBoolean("authenticated")){
-    // System.out.println("user role:"+jsonResponse.getString("role"));
-    // }
-    // }catch(NullPointerException e){
-    // System.err.println("error with authentication module!");
-    // }
-    //
-    // model.addAttribute("name", name);
-    // return "greeting";
-    // }
 }
