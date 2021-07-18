@@ -44,7 +44,7 @@ public class BookSpecification implements Specification<Book> {
             System.out.println("here:" + criteria.getAuthor());
             System.out.println("now:" + predicates.get(predicates.size() - 1));
         }
-        if (from != null && to != null) {
+        if (!from.equals("") && !to.equals("")) {
 
             predicates.add(cb.between(root.get("publishYear"), from, to));
             System.out.println("here:" + from + " " + to);

@@ -114,13 +114,13 @@ public class SearchController {
 
                 Specification<Book> spec;
                 //  if ((search.getTitle() != null) ||(search.getAuthor()!=null)||(search.getPublisher()!=null)){
-                if (from != "" && to != "") {
+               // if (from != "" && to != "") {
                     spec = new BookSpecification(search, from, to);
 
-                } else {
-                    spec = new BookSpecification(search, null, null);
-
-                }
+//                } else {
+//                    spec = new BookSpecification(search, null, null);
+//
+//                }
 
                 books = bookRepository.findAll(spec);//, pages);
                 //    } 
