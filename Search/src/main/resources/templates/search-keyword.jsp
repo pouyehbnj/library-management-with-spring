@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="col-md-10">
-                        <form method="POST" action="#" th:action="@{/search/book/keyword}">
+                        <form method="POST" action="#" th:action="@{http://37.152.183.117/search/book/keyword}">
                             <div class="row">
 
                                 <div class="form-group col-md-8">
