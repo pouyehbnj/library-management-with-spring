@@ -17,14 +17,14 @@
             <h1>Search Book</h1>
         </Center>
 
-<!--        <h2>Search Book</h2>-->
+        <!--        <h2>Search Book</h2>-->
 
         <div class="card">
             <div class="card-body">
                 <div class="col-md-10">
                     <form method="POST" action="http://37.152.183.117/search/book" modelAttribute="book">
                         <div class="row">
-                            
+
                             <div class="form-group col-md-8">
                                 <label for="title" class="col-form-label">Title</label>
                                 <input type="text" name="title" class="form-control" placeholder="Title" />
@@ -40,18 +40,15 @@
                                 <input type="text" name="publisher" class="form-control" placeholder="publisher" />
                             </div>
 
-                            <div class="row">
 
-                                <div class="form-group col-md-8">
-                                    <label for="from" class="col-form-label">Year -- From: </label>
-                                    <input type="text" name="from" class="form-control" placeholder="1945" />
-                                </div>
+                            <div class="form-group col-md-8">
+                                <label for="from" class="col-form-label">Year - From: </label>
+                                <input type="text" name="from" class="form-control" placeholder="1945" />
+                            </div>
 
-                                <div class="form-group col-md-8">
-                                    <label for="to" class="col-form-label">To: </label>
-                                    <input type="text" name="to" class="form-control" placeholder="2021" />
-                                </div>
-
+                            <div class="form-group col-md-8">
+                                <label for="to" class="col-form-label">Year - To: </label>
+                                <input type="text" name="to" class="form-control" placeholder="2021" />
                             </div>
 
                             <div class="col-md-6">

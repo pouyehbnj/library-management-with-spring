@@ -17,15 +17,19 @@
                     <div th:switch="${users}" class="container my-5">
                         <div class="row btn-toolbar">
 
-                            <p  class="col-sm-2">
-                                <a href="http://37.152.183.117/search/user/form" class="btn btn-primary">
-                                    <i class="fas fa-search ml-2"> Search User </i></a>
-                            </p>
+                            <div class="row btn-toolbar">  
+                                <p class="col-sm-2">
+                                <a href="/user/add" class="btn btn-primary">
+                                    <i class="fas fa-user-plus ml-2"> Add User </i></a>
+                                </p>
+                                <p class="col-sm-3">
+                                    <a href="http://37.152.183.117/search/user/form" class="btn btn-primary">
+                                        <i class="fas fa-search ml-2"> Search User </i></a>
+                                </p>
+                            </div>
+
                         </div>
-                        <p class="my-5">
-                            <a href="/user/add" class="btn btn-primary"> 
-                                <i class="fas fa-user-plus ml-2">  Add User </i></a>
-                        </p>
+
                         <div class="col-md-12">
                             <h2 th:case="null">No record found !!</h2>
                             <div th:case="*">
