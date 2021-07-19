@@ -1,5 +1,5 @@
 @echo off
 call mvn clean package
-call docker build -t com.library/SpringTest .
-call docker rm -f SpringTest
-call docker run -d -p 9080:9080 -p 9443:9443 --name SpringTest com.library/SpringTest
+call docker build -t library/authentication .
+call docker rm -f Authentication
+call docker run -d -p 8000:8000 --name Authentication library/authentication
