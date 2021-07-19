@@ -15,17 +15,10 @@
             <div class="card">
                 <div class="card-body">
                     <div th:switch="${users}" class="container my-5">
-                        <div class="row btn-toolbar">
-
-                            <p  class="col-sm-2">
-                                <a href="http://localhost:8001/user/search/form" class="btn btn-primary">
-                                    <i class="fas fa-search ml-2"> Search User </i></a>
-                            </p>
-                        </div>
-                        <p class="my-5">
+<!--                        <p class="my-5">
                             <a href="/user/add" class="btn btn-primary"> 
                                 <i class="fas fa-user-plus ml-2">  Add User </i></a>
-                        </p>
+                        </p>-->
                         <div class="col-md-12">
                             <h2 th:case="null">No record found !!</h2>
                             <div th:case="*">
@@ -35,8 +28,7 @@
                                             <th> Username </th>
                                             <th> Role </th>
                                             <th>Detail</th>
-                                            <th>Edit</th>
-                                            <th>Delete</th>
+                                            
 
                                         </tr>
                                     </thead>
@@ -44,9 +36,7 @@
                                         <tr th:each="user : ${users}">
                                             <td><span th:text="${user.username}"> Username </span></td>
                                             <td><span th:text="${user.role}"> Role </span></td>
-                                            <td><a th:href="@{/user/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-marker ml-2"></i></a></td>
-                                            <td><a th:href="@{/user/update/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a></td>
-                                            <td><a th:href="@{/remove-user/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
+                                            <td><a th:href="@{http://localhost:8002/user/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-marker ml-2"></i></a></td>    
 
                                         </tr>
                                     </tbody>

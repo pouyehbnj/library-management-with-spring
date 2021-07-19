@@ -50,10 +50,31 @@ public class User {
         return password;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    
+
     public User(String role, String username, String password) {
         this.role = role;
         this.username = username;
         this.password = password;
     }
 
+    public User() {
+    }
+    
 }
