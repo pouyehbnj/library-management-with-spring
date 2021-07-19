@@ -1,0 +1,19 @@
+version: '3'
+services:
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: pg_db
+      POSTGRES_PASSWORD: password
+    volumes:
+      - /var/lib/postgres
+      - ./dbscripts/postgres:/docker-entrypoint-initdb.d
+
+  redis:
+    image: shaghayeghtvkl/shaghayegh-redis:1.0
+    ports:
+      - 6379:6379
