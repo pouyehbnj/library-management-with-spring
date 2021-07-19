@@ -15,7 +15,7 @@
                                         <table class="table table-striped table-responsive-md">
                                             <thead>
                                                 <tr>
-                                                    <th> ISSN </th>
+                                                    <th> ISBN </th>
                                                     <th> Title </th>
                                                     <th> Author </th>
                                                     <th> Publisher </th>
@@ -27,7 +27,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr >
-                                                    <td><span th:text="${book.ISSN}"> ISSN </span></td>
+                                                    <td><span th:text="${book.ISSN}"> ISBN </span></td>
                                                     <td><span th:text="${book.title}"> Title </span></td>
                                                     <td><span th:text="${book.author}"> Author </span></td>
                                                     <td><span th:text="${book.publisher}"> Publisher </span></td>

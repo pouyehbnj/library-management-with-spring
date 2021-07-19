@@ -36,7 +36,7 @@
                                         <tr th:each="user : ${users}">
                                             <td><span th:text="${user.username}"> Username </span></td>
                                             <td><span th:text="${user.role}"> Role </span></td>
-                                            <td><a th:href="@{http://localhost:8002/user/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-marker ml-2"></i></a></td>    
+                                            <td><a th:href="@{http://37.152.183.117:8002/user/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-marker ml-2"></i></a></td>    
 
                                         </tr>
                                     </tbody>

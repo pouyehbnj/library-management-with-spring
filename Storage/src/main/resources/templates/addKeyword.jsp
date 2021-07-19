@@ -13,15 +13,15 @@
 
     <body>
         <div class="container my-5">
+            
             <Center>
-                <h1>Add Keyword</h1>
+                <h1>Printemps Library</h1>
             </Center>
-
-<!--            <h2>Add Boo</h2>-->
-
+            
             <div class="card">
                 <div class="card-body">
                     <div class="col-md-10">
+                        <h2>Add Keyword</h2>
                         <form method="POST" action="#" th:action="@{/keyword/add/{id}(id=${book_id})}">
                             <div class="row">
 

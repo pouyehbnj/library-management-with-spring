@@ -17,11 +17,12 @@
             <h1>Printemps Library</h1>
         </Center>
 
-        <h2>Add User</h2>
 
         <div class="card">
             <div class="card-body">
                 <div class="col-md-10">
+
+                    <h2>Add User</h2>
                     <form method="POST" action="/user/add">
                         <div class="row">
 
@@ -37,10 +38,11 @@
 
                             <div class="form-group col-md-8">
                                 <label for="role" class="col-form-label">Role</label>
-                               
+
                                 <select id="dropdown" class="form-control" onchange="run()">
                                     <option selected>Choose Role</option>
-                                    <option type="text" name="role" value="publisher" class="form-control">Publisher</option>
+                                    <option type="text" name="role" value="publisher" class="form-control">Publisher
+                                    </option>
                                     <option type="text" name="role" value="user" class="form-control">User</option>
                                     <option type="text" name="role" value="admin" class="form-control">Admin</option>
                                 </select>

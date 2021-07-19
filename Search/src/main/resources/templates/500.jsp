@@ -60,7 +60,7 @@
         </div>
 
         <div class="row">
-            <form method="GET" action="http://localhost:8000/login">
+            <form method="GET" action="http://37.152.183.117:8000/login">
 
                 <div class="col-md-6">
                     <input type="submit" class="btn btn-primary" name="Login" value="Login"/>

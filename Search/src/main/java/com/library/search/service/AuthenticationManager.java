@@ -22,7 +22,7 @@ import org.springframework.web.client.RestTemplate;
 public class AuthenticationManager {
 
     public JSONObject AuthenticationUser(String username, String session) {
-        final String uri = "http://localhost:8000/checkSessions";
+        final String uri = "http://37.152.183.117:8000/checkSessions";
         Map<String, String> reqBody = new HashMap<String, String>();
         reqBody.put("username", username);
         reqBody.put("sessionID", session);

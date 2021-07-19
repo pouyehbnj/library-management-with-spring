@@ -20,7 +20,7 @@
                     <div class="row btn-toolbar">
 
                         <p  class="col-sm-2">
-                            <a href="http://localhost:8002/books" class="btn btn-primary">
+                            <a href="http://37.152.183.117:8002/books" class="btn btn-primary">
                                 <i class="fas fa-search ml-2"> Back </i></a>
                         </p>
 
@@ -81,7 +81,7 @@
                                         <td><span th:text="${book.publishYear}"> Publish Year </span></td>
                                         <td><span th:text="${book.createdAt}"> Adding Date </span></td>
                                         <td><img th:SRC="@{${book.image}}" with="80" height="80"></img></td>
-                                        <td><a th:href="@{http://localhost:8002/book/{id}(id=${book.id})}" class="btn btn-primary"><i
+                                        <td><a th:href="@{http://37.152.183.117:8002/book/{id}(id=${book.id})}" class="btn btn-primary"><i
                                                     class="fas fa-marker ml-2"></i></a></td>
 
                                     </tr>

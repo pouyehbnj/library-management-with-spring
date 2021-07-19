@@ -92,14 +92,14 @@ public class AuthenticationController {
 
                 String role = user.getRole();
                 if (role.equals("admin")){
-                    return new ModelAndView("redirect:http://localhost:8002/users");
+                    return new ModelAndView("redirect:http://37.152.183.117:8002/users");
 
                 }
                     else if(role.equals("publisher")){
-                        return new ModelAndView("redirect:http://localhost:8002/books");
+                        return new ModelAndView("redirect:http://37.152.183.117:8002/books");
                     }
                     else if(role.equals("user")){
-                        return new ModelAndView("redirect:http://localhost:8002/books");
+                        return new ModelAndView("redirect:http://37.152.183.117:8002/books");
                     }
                     else {
                         return new ModelAndView("401");
