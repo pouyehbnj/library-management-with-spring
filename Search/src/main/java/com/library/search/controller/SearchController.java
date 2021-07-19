@@ -201,7 +201,7 @@ public class SearchController {
                 String request = req.get("keywords");
                 String[] words = request.split(",");
                 Object[] ids;
-                 ids = bookKeywordRepository.findBookKeywords(Arrays.asList(words));
+                 ids = bookKeywordRepository.findBookKeywords(Arrays.asList(words), words.length);
                  for(Object id : ids){
                      System.out.println("id is:"+Long.parseLong(String.valueOf(id)));
                     Optional<Book>  bookInfo = bookRepository.findById(Long.parseLong(String.valueOf(id)));

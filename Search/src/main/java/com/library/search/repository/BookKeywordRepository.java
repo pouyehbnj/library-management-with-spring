@@ -21,18 +21,34 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookKeywordRepository extends JpaRepository<BookKeyword, Long> {
 
-    //List<BookKeyword> findAllByKeyword(Keyword keyword);
+    // List<BookKeyword> findAllByKeyword(Keyword keyword);
 
-    String query = "SELECT distinct b.id FROM  books b INNER JOIN (SELECT bk.book_id "
-    + "FROM book_keywords bk INNER JOIN books b "
-    + "ON b.id = bk.book_id "
-    + "INNER JOIN keywords k "
-    + "ON k.id = bk.keyword_id "
-    + "WHERE k.word IN :words) bb "
-    + "ON b.id = bb.book_id";
+    // String query = "SELECT distinct b.id FROM books b INNER JOIN (SELECT
+    // bk.book_id "
+    // + "FROM book_keywords bk INNER JOIN books b "
+    // + "ON b.id = bk.book_id "
+    // + "INNER JOIN keywords k "
+    // + "ON k.id = bk.keyword_id "
+    // + "WHERE k.word IN :words) bb "
+    // + "ON b.id = bb.book_id";
 
-    @Query(value=query, nativeQuery=true)
+   String query = "SELECT distinct b.id"
++"  FROM   books b"
++"  INNER JOIN (SELECT   bk.book_id"
++"                 FROM  book_keywords bk"
++"                          INNER JOIN books b"
++"                            ON b.id = bk.book_id"
++"                          INNER JOIN keywords kw"
++"                            ON kw.id = bk.keyword_id"
++"                 WHERE    kw.word IN :words"
++"                 GROUP BY bk.book_id"
++"                 HAVING   Count(bk.book_id) = :length) bb"
++"       ON b.id = bb.book_id;";
 
-    Object[] findBookKeywords(@Param List<String> words);
+
+
+    @Query(value = query, nativeQuery = true)
+
+    Object[] findBookKeywords(@Param List<String> words, @Param int length);
 
 }
