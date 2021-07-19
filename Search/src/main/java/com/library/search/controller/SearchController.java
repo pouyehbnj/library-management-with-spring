@@ -205,6 +205,7 @@ public class SearchController {
                  for(Object id : ids){
                      System.out.println("id is:"+Long.parseLong(String.valueOf(id)));
                     Optional<Book>  bookInfo = bookRepository.findById(Long.parseLong(String.valueOf(id)));
+                    //if(books.ge)
                      books.add(bookInfo.get());
                     
                  }

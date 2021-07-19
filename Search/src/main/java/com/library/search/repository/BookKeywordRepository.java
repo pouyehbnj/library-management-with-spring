@@ -23,7 +23,7 @@ public interface BookKeywordRepository extends JpaRepository<BookKeyword, Long> 
 
     //List<BookKeyword> findAllByKeyword(Keyword keyword);
 
-    String query = "SELECT b.id FROM  books b INNER JOIN (SELECT bk.book_id "
+    String query = "SELECT distinct b.id FROM  books b INNER JOIN (SELECT bk.book_id "
     + "FROM book_keywords bk INNER JOIN books b "
     + "ON b.id = bk.book_id "
     + "INNER JOIN keywords k "
