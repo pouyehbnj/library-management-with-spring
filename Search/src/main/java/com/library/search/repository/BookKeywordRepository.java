@@ -23,16 +23,16 @@ public interface BookKeywordRepository extends JpaRepository<BookKeyword, Long> 
 
     //List<BookKeyword> findAllByKeyword(Keyword keyword);
 
-    String query = "SELECT * FROM  books b INNER JOIN (SELECT bk.book_id "
+    String query = "SELECT b.id FROM  books b INNER JOIN (SELECT bk.book_id "
     + "FROM book_keywords bk INNER JOIN books b "
     + "ON b.id = bk.book_id "
     + "INNER JOIN keywords k "
     + "ON k.id = bk.keyword_id "
-    + "WHERE k.word IN :words) bb"
+    + "WHERE k.word IN :words) bb "
     + "ON b.id = bb.book_id";
 
     @Query(value=query, nativeQuery=true)
 
-    List<Book> findBookKeywords(@Param List<String> words);
+    Object[] findBookKeywords(@Param List<String> words);
 
 }

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.json.JSONException;
@@ -191,7 +192,7 @@ public class SearchController {
         AuthenticationManager manager = new AuthenticationManager();
         System.out.println("page:" + page + " size:" + size);
 
-        List<Book> books = null;
+        List<Book> books=new ArrayList<Book>();
         JSONObject jsonResponse = null;
         try {
             jsonResponse = manager.AuthenticationUser(username, session);
@@ -199,40 +200,19 @@ public class SearchController {
             if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
                 String request = req.get("keywords");
                 String[] words = request.split(",");
-                 books = bookKeywordRepository.findBookKeywords(Arrays.asList(words));
-                 for(Book book : books){
-                     System.out.println("books:"+book.getTitle());
+                Object[] ids;
+                 ids = bookKeywordRepository.findBookKeywords(Arrays.asList(words));
+                 for(Object id : ids){
+                     System.out.println("id is:"+Long.parseLong(String.valueOf(id)));
+                    Optional<Book>  bookInfo = bookRepository.findById(Long.parseLong(String.valueOf(id)));
+                     books.add(bookInfo.get());
+                    
                  }
-//                List<Keyword> keywords = keywordRepository.findAllByWordIn(Arrays.asList(words));
-//                List<List<BookKeyword>> bookKeywords = null;
-//                List<List<Long>> ids;
-//                HashSet<Long> intersectionSet = new HashSet<>();
-//                for (Keyword keyword : keywords) {
-//                    bookKeywords.add(bookKeywordRepository.findAllByKeyword(keyword));
-//                }
-//                for (List<BookKeyword> bookKeyword : bookKeywords) {
-//                    for (BookKeyword word : bookKeyword) {
-////                        ids.add(word.getBook().getId());
-////                        ids.add((word.getBook().getId()));
-//                    }
-//                }
-//                intersectionSet.add(bookKeywords.get(0).get(0).getBook().getId());
-//                for (List<BookKeyword> bookKeyword : bookKeywords) {
-//                    for (BookKeyword word : bookKeyword) {
-//                     //   HashSet<Integer> set = new HashSet<>(Arrays.asList(bookKeyword));
-//                      //  intersectionSet.retainAll(set);
-//                    }
-//
-//                }
+               
 
                 Map<String, Object> response = new HashMap<String, Object>();
 
                 response.put("books", books);
-//                response.put("currentPage", books.getNumber());
-//                System.out.println("currentPage:" + books.getNumber());
-//                response.put("noOfPages", books.getTotalPages());
-//                System.out.println("noOfPages:" + books.getTotalPages());
-//                response.put("filterValue", "createdAt");
 
                 if (jsonResponse.getString("role").equals("user")) {
                     return new ModelAndView("books-user", response);
@@ -242,6 +222,7 @@ public class SearchController {
                 return new ModelAndView("401");
             }
         } catch (NullPointerException e) {
+            //e.printStackTrace();
             System.err.println("error with authentication module!");
             return new ModelAndView("500");
         }
