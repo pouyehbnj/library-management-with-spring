@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Search Module">
+
+    <httpEndpoint id="defaultHttpEndpoint" httpPort="8001"/>
+
+</server>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Storage Module">
+
+    <httpEndpoint id="defaultHttpEndpoint" httpPort="8002"/>
+
+</server>
