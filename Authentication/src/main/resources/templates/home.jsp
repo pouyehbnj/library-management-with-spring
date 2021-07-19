@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                         </form>
-                        <form method="GET" action="http://37.152.183.117:8002/addBook">
+                        <form method="GET" action="http://37.152.183.117/addBook">
                             <div class="row">
                                 <div class="col-md-6">
                                     <input type="submit" class="btn btn-primary" name="submit" />
