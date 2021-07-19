@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="col-md-10">
-                        <form method="POST" action="/user/search" modelAttribute="user">
+                        <form method="POST" action="/search/user" modelAttribute="user">
                             <div class="row">
 
                                 <div class="form-group col-md-8">

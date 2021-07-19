@@ -98,7 +98,7 @@
 <!--    <nav aria-label="Pagination" th:if="${noOfPages gt 0}" onmouseover="run();">
         <ul class="pagination justify-content-center font-weight-bold" onmouseover="run();">
             <li class="page-item" th:classappend="${currentPage eq 0} ? 'disabled'" onmouseover="run();">
-                <a class="page-link" th:href="@{/book/search?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
+                <a class="page-link" th:href="@{/search/book?page={id}(id=${currentPage lt 2 ? 1 : currentPage})}"
                     aria-label="Previous" title="Previous Page" data-toggle="tooltip" onmouseover="run();" id="link-1">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
@@ -106,11 +106,11 @@
 
             <li class="page-item" th:classappend="${i eq currentPage + 1} ? 'active'"
                 th:each="i : ${#numbers.sequence( 1, noOfPages, 1)}" onmouseover="run();">
-                <a class="page-link" th:href="@{/book/search?page={id}(id=${i})}" th:text="${i}" th:title="${'Page '+ i}"
+                <a class="page-link" th:href="@{/search/book?page={id}(id=${i})}" th:text="${i}" th:title="${'Page '+ i}"
                     data-toggle="tooltip" id="link-2" value="i"></a>
             </li>
             <li class="page-item" th:classappend="${currentPage + 1 eq noOfPages} ? 'disabled'" onmouseover="run()">
-                <a class="page-link" th:href="@{/book/search?page={id}(id=${currentPage + 2})}" aria-label="Next"
+                <a class="page-link" th:href="@{/search/book?page={id}(id=${currentPage + 2})}" aria-label="Next"
                     title="Next Page" data-toggle="tooltip" id="link-3">
                     <span aria-hidden="true">&raquo;</span>
                 </a>

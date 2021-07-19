@@ -18,7 +18,7 @@
                         <div class="row btn-toolbar">
 
                             <p  class="col-sm-2">
-                                <a href="http://37.152.183.117:8001/user/search/form" class="btn btn-primary">
+                                <a href="http://37.152.183.117:8001/search/user/form" class="btn btn-primary">
                                     <i class="fas fa-search ml-2"> Search User </i></a>
                             </p>
                         </div>

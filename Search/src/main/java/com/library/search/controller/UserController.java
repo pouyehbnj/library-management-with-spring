@@ -41,7 +41,7 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
     
-    @GetMapping("/user/search/form")
+    @GetMapping("/search/user/form")
     public ModelAndView searchUsersForm(@CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session) {
 
@@ -68,7 +68,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/user/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+    @RequestMapping(value = "/search/user", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
         MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ModelAndView searchBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
             @RequestParam(name = "size", required = false, defaultValue = "3") String size,

@@ -60,7 +60,7 @@ public class SearchController {
     @Autowired
     BookKeywordRepository bookKeywordRepository;
 
-    @GetMapping("/book/search/form")
+    @GetMapping("/search/book/form")
     public ModelAndView searchBooksForm(@CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session) {
 
@@ -87,7 +87,7 @@ public class SearchController {
         }
     }
 
-    @RequestMapping(value = "/book/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+    @RequestMapping(value = "/search/book", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
         MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ModelAndView searchBooks(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
             @RequestParam(name = "size", required = false, defaultValue = "3") String size,
@@ -153,7 +153,7 @@ public class SearchController {
 
     }
 
-    @GetMapping("/book/search/keyword/form")
+    @GetMapping("/search/book/keyword/form")
     public ModelAndView searchKeywordsForm(@CookieValue(value = "username") String username,
             @CookieValue(value = "sessionID") String session) {
 
@@ -180,7 +180,7 @@ public class SearchController {
         }
     }
 
-    @RequestMapping(value = "/book/search/keyword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+    @RequestMapping(value = "/search/book/keyword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
         MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ModelAndView searchKeywords(@RequestParam(name = "page", required = false, defaultValue = "1") String page,
             @RequestParam(name = "size", required = false, defaultValue = "3") String size,
