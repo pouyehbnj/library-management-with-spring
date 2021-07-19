@@ -199,27 +199,31 @@ public class SearchController {
             if (jsonResponse.getBoolean("authenticated") && role.equals("user")) {
                 String request = req.get("keywords");
                 String[] words = request.split(",");
-                List<Keyword> keywords = keywordRepository.findAllByWordIn(Arrays.asList(words));
-                List<List<BookKeyword>> bookKeywords = null;
-                List<List<Long>> ids;
-                HashSet<Long> intersectionSet = new HashSet<>();
-                for (Keyword keyword : keywords) {
-                    bookKeywords.add(bookKeywordRepository.findAllByKeyword(keyword));
-                }
-                for (List<BookKeyword> bookKeyword : bookKeywords) {
-                    for (BookKeyword word : bookKeyword) {
-//                        ids.add(word.getBook().getId());
-//                        ids.add((word.getBook().getId()));
-                    }
-                }
-                intersectionSet.add(bookKeywords.get(0).get(0).getBook().getId());
-                for (List<BookKeyword> bookKeyword : bookKeywords) {
-                    for (BookKeyword word : bookKeyword) {
-                     //   HashSet<Integer> set = new HashSet<>(Arrays.asList(bookKeyword));
-                      //  intersectionSet.retainAll(set);
-                    }
-
-                }
+                 books = bookKeywordRepository.findBookKeywords(Arrays.asList(words));
+                 for(Book book : books){
+                     System.out.println("books:"+book.getTitle());
+                 }
+//                List<Keyword> keywords = keywordRepository.findAllByWordIn(Arrays.asList(words));
+//                List<List<BookKeyword>> bookKeywords = null;
+//                List<List<Long>> ids;
+//                HashSet<Long> intersectionSet = new HashSet<>();
+//                for (Keyword keyword : keywords) {
+//                    bookKeywords.add(bookKeywordRepository.findAllByKeyword(keyword));
+//                }
+//                for (List<BookKeyword> bookKeyword : bookKeywords) {
+//                    for (BookKeyword word : bookKeyword) {
+////                        ids.add(word.getBook().getId());
+////                        ids.add((word.getBook().getId()));
+//                    }
+//                }
+//                intersectionSet.add(bookKeywords.get(0).get(0).getBook().getId());
+//                for (List<BookKeyword> bookKeyword : bookKeywords) {
+//                    for (BookKeyword word : bookKeyword) {
+//                     //   HashSet<Integer> set = new HashSet<>(Arrays.asList(bookKeyword));
+//                      //  intersectionSet.retainAll(set);
+//                    }
+//
+//                }
 
                 Map<String, Object> response = new HashMap<String, Object>();
 

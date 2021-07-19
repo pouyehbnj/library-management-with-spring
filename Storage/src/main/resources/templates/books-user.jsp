@@ -24,7 +24,7 @@
                                 <i class="fas fa-search ml-2"> Search Book </i></a>
                         </p>
                         <p  class="col-sm-3">
-                            <a href="http://localhost:8001/book/search/keyword" class="btn btn-primary">
+                            <a href="http://localhost:8001/book/search/keyword/form" class="btn btn-primary">
                                 <i class="fas fa-search ml-2"> Search Keyword </i></a>
                         </p>
                     </div>
