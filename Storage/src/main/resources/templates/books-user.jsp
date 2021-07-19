@@ -20,11 +20,11 @@
                     <div class="row btn-toolbar">
 
                         <p  class="col-sm-2">
-                            <a href="http://37.152.183.117:8001/search/book/form" class="btn btn-primary">
+                            <a href="http://37.152.183.117/search/book/form" class="btn btn-primary">
                                 <i class="fas fa-search ml-2"> Search Book </i></a>
                         </p>
                         <p  class="col-sm-3">
-                            <a href="http://37.152.183.117:8001/search/book/keyword/form" class="btn btn-primary">
+                            <a href="http://37.152.183.117/search/book/keyword/form" class="btn btn-primary">
                                 <i class="fas fa-search ml-2"> Search Keyword </i></a>
                         </p>
                     </div>
