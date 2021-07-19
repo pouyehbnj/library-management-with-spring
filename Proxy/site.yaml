@@ -1,0 +1,42 @@
+---
+- name: Configure DNS
+  hosts: library-server
+  remote_user: root
+  tasks:
+    - name: one
+      lineinfile:
+        path: /etc/resolv.conf
+        insertbefore: BOF
+        line: 'nameserver 185.51.200.2'
+
+    - name: two
+      lineinfile:
+        path: /etc/resolv.conf
+        insertbefore: BOF
+        line: 'nameserver 178.22.122.100'
+
+# ------------------------------------------------------------------------------
+
+- name: Install Nginx
+  hosts: library-server
+  remote_user: root
+  tasks:
+    - name: Install Nginx  
+      include: ./nginx/install.yaml
+
+    - name: Configure Nginx  
+      include: ./nginx/config.yaml
+     
+  handlers:
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+
+
+...

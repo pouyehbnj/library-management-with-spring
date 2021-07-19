@@ -1,0 +1,98 @@
+server {
+    listen 80;
+
+    server_name {{SERVER_IP}};
+
+    location /login {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8000/login";
+    }
+
+    location /search/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8001/search/";
+    }
+
+    location /book/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/book/";
+    }
+
+
+    location /books/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/books/";
+    }
+
+    location /user/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/user/";
+    }
+
+    location /users/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/users/";
+    }
+
+
+    location /update-user/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/update-user/";
+    }
+
+    location /remove-user/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/remove-user/";
+    }
+
+
+    location /update-book/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/update-book/";
+    }
+
+
+    location /remove-book/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/remove-book/";
+    }
+
+    location /update-comment/ {        
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/update-comment/";
+  
+    }
+
+    location /keyword/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/keyword/";
+    }
+
+    location /comment/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/comment/";
+    }
+
+    location /comments/ {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://{{SERVER_IP}}:8002/comments/";
+    }
+
+
+
+
+}
